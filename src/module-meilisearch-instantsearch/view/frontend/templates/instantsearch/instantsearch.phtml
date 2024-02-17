@@ -35,7 +35,7 @@
         'instantMeilisearch',
         'priceUtils'
     ], function($, instantsearch, meilisearch, priceUtils) {
-        //$('.instantsearch-replaced-content').hide();
+        $('.instantsearch-replaced-content').hide();
 
         const searchClient = meilisearch.instantMeiliSearch(
             '<?= $viewModel->getServerSettingsHelper()->getServerSettingsClientAddress() ?>'

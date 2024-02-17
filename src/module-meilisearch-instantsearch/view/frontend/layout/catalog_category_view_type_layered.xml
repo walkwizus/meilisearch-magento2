@@ -9,7 +9,7 @@
                 </arguments>
             </block>
         </referenceContainer>
-        <referenceBlock name="category.products" remove="true"/>
-        <referenceBlock name="catalog.leftnav" remove="true"/>
+        <!--<referenceBlock name="category.products" remove="true"/>
+        <referenceBlock name="catalog.leftnav" remove="true"/>-->
     </body>
 </page>
