@@ -62,7 +62,13 @@ class Eav implements AttributeMapperInterface
     private array $attributeOptionsCache;
 
     /**
+     * @var array|string[]
+     */
+    private array $excludedAttributes;
+
+    /**
      * @param DataProvider $dataProvider
+     * @param array $excludedAttributes
      */
     public function __construct(
         DataProvider $dataProvider,
