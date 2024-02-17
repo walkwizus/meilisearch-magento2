@@ -53,8 +53,6 @@ class CategoryPosition implements AttributeProviderInterface
             $positionAttributes[] = 'position_category_' . $category->getId();
         }
 
-        \Magento\Framework\App\ObjectManager::getInstance()->get('Walkwizus\Log')->debug($positionAttributes);
-
         return $positionAttributes;
     }
 }
