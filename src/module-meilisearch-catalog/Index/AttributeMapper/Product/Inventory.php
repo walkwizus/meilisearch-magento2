@@ -37,6 +37,11 @@ class Inventory implements AttributeMapperInterface
     protected StockIndexTableNameResolverInterface $stockIndexTableNameResolver;
 
     /**
+     * @var array|null
+     */
+    protected ?array $stockIdByWebsite = null;
+
+    /**
      * @param ResourceConnection $resource
      * @param StoreManagerInterface $storeManager
      * @param StockResolverInterface $stockResolver
