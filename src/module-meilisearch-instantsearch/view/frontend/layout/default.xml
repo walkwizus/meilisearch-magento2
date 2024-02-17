@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Walkwizus_MeilisearchInstantSearch::css/algolia/theme/classic.css" />
+        <css src="Walkwizus_MeilisearchInstantSearch::css/algolia/theme/autocomplete.css" />
+        <css src="Walkwizus_MeilisearchInstantSearch::css/algolia/theme/grid.css" />
+        <css src="Walkwizus_MeilisearchInstantSearch::css/algolia/theme/algolia-reset.css" />
+        <css src="Walkwizus_MeilisearchInstantSearch::css/algolia/theme/instantsearch.v3.css" />
+        <css src="Walkwizus_MeilisearchInstantSearch::css/algolia/theme/recommend.css" />
+    </head>
+    <body>
+        <referenceBlock name="top.search">
+            <action method="setTemplate" ifconfig="meilisearch_frontend/autocomplete/enabled">
+                <argument name="setTemplate" xsi:type="string">Walkwizus_MeilisearchInstantSearch::instantsearch/autocomplete.phtml</argument>
+            </action>
+            <arguments>
+                <argument name="view_model" xsi:type="object">Walkwizus\MeilisearchInstantSearch\ViewModel\Config</argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

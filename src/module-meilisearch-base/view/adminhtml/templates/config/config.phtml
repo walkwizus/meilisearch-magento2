@@ -1,0 +1,16 @@
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        require([
+            'jquery',
+            'Magento_Theme/js/sortable'
+        ], function ($) {
+            setTimeout(function () {
+                $('#meilisearch_indices_ranking_rules tbody').sortable({
+                    containment: "parent",
+                    items: 'tr',
+                    tolerance: 'pointer',
+                });
+            }, 1000);
+        });
+    });
+</script>

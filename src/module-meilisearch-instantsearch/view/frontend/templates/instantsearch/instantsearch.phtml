@@ -1,0 +1,192 @@
+<?php /** @var \Magento\Catalog\Block\Category\View $block */ ?>
+<?php /** @var Walkwizus\MeilisearchInstantSearch\ViewModel\Config $viewModel */ $viewModel = $block->getViewModel(); ?>
+<?php $attributes = json_encode($viewModel->getRefinementList()); ?>
+<?php $swatches = json_encode($viewModel->getSwatches()); ?>
+<?php $baseUrl = $viewModel->getBaseUrl(); ?>
+<?php $productMediaUrl = $viewModel->getProductMediaUrl(); ?>
+<?php $productUrlSuffix = $viewModel->getProductUrlSuffix(); ?>
+<style>
+    .ais-Hits-item { display: inline-block; }
+    .ais-Hits-item > * { width: auto !important; }
+    .ais-RefinementList-list:after { content: ""; display: block; clear: both; }
+</style>
+<div class="columns">
+    <div class="column main">
+        <div id="searchbox" focus></div>
+        <div class="toolbar toolbar-products">
+            <div id="stats" class="toolbar-amount"></div>
+            <div id="sort-by" class="toolbar-sorter sorter"></div>
+        </div>
+        <div id="hits" class="products wrapper grid products-grid"></div>
+        <div id="pagination"></div>
+    </div>
+    <div class="sidebar sidebar-main">
+        <div id="clear-refinements"></div>
+        <div id="current-refinements"></div>
+        <?php foreach (json_decode($attributes) as $attribute) : ?>
+        <div id="refinement-list-<?= $attribute ?>" style="margin-top: 15px;"></div>
+        <?php endforeach; ?>
+    </div>
+</div>
+<script>
+    require([
+        'jquery',
+        'instantsearch',
+        'instantMeilisearch',
+        'priceUtils'
+    ], function($, instantsearch, meilisearch, priceUtils) {
+        //$('.instantsearch-replaced-content').hide();
+
+        const searchClient = meilisearch.instantMeiliSearch(
+            '<?= $viewModel->getServerSettingsHelper()->getServerSettingsClientAddress() ?>'
+        ).searchClient;
+
+        const search = instantsearch({
+            indexName: '<?= $viewModel->getIndexName('catalog_product') ?>',
+            searchClient: searchClient
+        });
+
+        search.addWidgets([
+            /*instantsearch.widgets.searchBox({
+                container: '#searchbox'
+            }),*/
+            instantsearch.widgets.configure({
+                hitsPerPage: 9,
+                filters: 'category_ids = <?= $block->getCurrentCategory()->getId() ?>'
+            }),
+            instantsearch.widgets.stats({
+                container: '#stats'
+            }),
+            instantsearch.widgets.sortBy({
+                container: '#sort-by',
+                items: [{
+                    label: 'Relevance',
+                    value: '<?= $viewModel->getIndexName('catalog_product') ?>'
+                },{
+                    label: 'Lowest price',
+                    value: '<?= $viewModel->getIndexName('catalog_product') ?>:price_<?= $viewModel->getCustomerGroupId() ?>:asc'
+                },{
+                    label: 'Highest price',
+                    value: '<?= $viewModel->getIndexName('catalog_product') ?>:price_<?= $viewModel->getCustomerGroupId() ?>:desc'
+                }]
+            }),
+            instantsearch.widgets.hits({
+                container: "#hits",
+                templates: {
+                    item(hit, { html, components }) {
+                        return html`
+                            <div class="item product product-item">
+                                <div class="product-item-info">
+                                    <a href="${hit.url}" class="product photo product-item-photo">
+                                        <span class="product-image-container" style="width: 240px;">
+                                            <span class="product-image-wrapper" style="padding-bottom: 125%;">
+                                                <img class="product-image-photo" src="${hit.image_url}" loading="lazy" width="240" height="300" alt="${hit.name}" />
+                                            </span>
+                                        </span>
+                                    </a>
+                                    <div class="product details product-item-details">
+                                        <strong class="product name product-item-name">
+                                            <a href="${hit.url}" class="product-item-link">${hit.name}</a>
+                                        </strong>
+                                        <div class="price-box price-final_price">
+                                            <span class="normal-price">
+                                                <span class="price-container price-final_price tax weee">
+                                                    <span class="price-wrapper">
+                                                        <span class="price">
+                                                            ${hit.formattedPrice}
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+`;
+                    }
+                },
+                transformItems(items) {
+                    return items.map((item) => {
+                        let baseUrl = <?= json_encode($baseUrl) ?>;
+                        let productUrlSuffix = <?= json_encode($productUrlSuffix) ?>;
+                        item.url = baseUrl + item.url_key + productUrlSuffix;
+
+                        let productUrlMedia = <?= json_encode($productMediaUrl) ?>;
+                        item.image_url = productUrlMedia + item.image;
+
+                        let customerGroupId = <?= $viewModel->getCustomerGroupId() ?>;
+                        let priceFormat = <?= json_encode($viewModel->getPriceFormat()) ?>;
+                        item.formattedPrice = priceUtils.formatPriceLocale(
+                            item['price_' + customerGroupId],
+                            priceFormat,
+                            false
+                        )
+
+                        return item;
+                    });
+                }
+            }),
+            instantsearch.widgets.pagination({
+                container: '#pagination'
+            }),
+            instantsearch.widgets.clearRefinements({
+                container: '#clear-refinements'
+            }),
+            instantsearch.widgets.currentRefinements({
+                container: '#current-refinements'
+            })
+        ]);
+
+        const attributes = <?= $attributes ?>;
+        const swatches = <?= $swatches ?>;
+        $.each(attributes, function(i, v) {
+            const refinementListWithPanel = instantsearch.widgets.panel({
+                templates: {
+                    header: v
+                },
+                hidden(options) {
+                    return !options.canRefine;
+                }
+            })(instantsearch.widgets.refinementList);
+
+            search.addWidgets([refinementListWithPanel({
+                container: '#refinement-list-' + v,
+                attribute: v,
+                sortBy: ['count:desc', 'name:asc'],
+                limit: 5,
+                showMore: true,
+                searchable: true,
+                templates: {
+                    item(item, { html }) {
+                        const { url, label, count, isRefined } = item;
+                        const attributeCode = v.replace('_value', '');
+                        if (attributeCode in swatches) {
+                            const swatch = swatches[attributeCode][label];
+                            switch(swatch.type) {
+                                case '0':
+                                    return html`
+                                        <a class="swatch-option-link-layered" href="${url}">
+                                            <div class="swatch-option text ${isRefined ? 'selected' : ''}">${swatch.value}</div>
+                                        </a>`;
+                                case '1':
+                                    return html`
+                                        <a class="swatch-option-link-layered" href="${url}">
+                                            <div class="swatch-option color ${isRefined ? 'selected' : ''}" style="background-color: ${swatch.value};"></div>
+                                        </a>`;
+                            }
+                        }
+
+                        return html`
+                            <label class="ais-RefinementList-label">
+                                <input type="checkbox" class="ais-RefinementList-checkbox" value="${label}" checked="${isRefined ? 'checked' : ''}" />
+                                <span class="ais-RefinementList-labelText">${label} </span>
+                                <span class="ais-RefinementList-count">${count}</span>
+                            </label>`;
+                    }
+                }
+            })]);
+        });
+
+        search.start();
+    });
+</script>

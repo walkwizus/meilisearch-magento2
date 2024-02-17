@@ -1,0 +1,103 @@
+<?php /** @var \Walkwizus\MeilisearchInstantSearch\ViewModel\Config $viewModel */ $viewModel = $block->getViewModel(); ?>
+<?php $baseUrl = $viewModel->getBaseUrl(); ?>
+<?php $productMediaUrl = $viewModel->getProductMediaUrl(); ?>
+<?php $productUrlSuffix = $viewModel->getProductUrlSuffix(); ?>
+<div id="autocomplete"></div>
+<script>
+    require([
+        'autocomplete-js',
+        'meilisearchAutocompleteClient',
+        'Walkwizus_MeilisearchInstantSearch/js/autocomplete-plugin-recent-searches'
+    ], function(autocomplete, autocompleteClient, recentSearchesPlugin) {
+        const searchClient = autocompleteClient.meilisearchAutocompleteClient({
+            url: '<?= $viewModel->getServerSettingsHelper()->getServerSettingsClientAddress() ?>',
+            apiKey: '<?= $viewModel->getServerSettingsHelper()->getServerSettingsClientApiKey() ?>'
+        });
+
+        const recentSearches = recentSearchesPlugin.createLocalStorageRecentSearchesPlugin({
+            key: 'navbar'
+        });
+
+        autocomplete.autocomplete({
+            container: '#autocomplete',
+            placeholder: 'Search',
+            plugins: [recentSearches],
+            openOnFocus: true,
+            onSubmit: function(data) {
+                if (data.state.query && data.state.query !== null && data.state.query !== "") {
+                    window.location.href = '<?= $baseUrl ?>' + `catalogsearch/result/?q=${data.state.query}`;
+                }
+            },
+            getSources({ query }) {
+                return [
+                    {
+                        sourceId: '<?= $viewModel->getIndexName('catalog_product') ?>',
+                        getItems() {
+                            return autocompleteClient.getMeilisearchResults({
+                                searchClient,
+                                queries: [
+                                    {
+                                        indexName: '<?= $viewModel->getIndexName('catalog_product') ?>',
+                                        query,
+                                    },
+                                ],
+                            })
+                        },
+                        templates: {
+                            header() {
+                                return 'Products';
+                            },
+                            item({ item, components, html }) {
+                                return html`<div class="aa-ItemWrapper">
+                                    <div class="aa-ItemContent">
+                                        <div class="aa-ItemIcon aa-ItemIcon--alignTop">
+                                            <img
+                                                src="<?= $productMediaUrl ?>${item.image}"
+                                                alt="${item.name}"
+                                                width="40"
+                                                height="40"
+                                            />
+                                        </div>
+                                        <div class="aa-ItemContentBody">
+                                            <a href="<?= $baseUrl ?>${item.url_key}<?= $productUrlSuffix ?>">
+                                                <div class="aa-ItemContentTitle">
+                                                    ${item.name}
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>`;
+                            }
+                        },
+                    },
+                    {
+                        sourceId: '<?= $viewModel->getIndexName('catalog_category') ?>',
+                        getItems() {
+                            return autocompleteClient.getMeilisearchResults({
+                                searchClient,
+                                queries: [
+                                    {
+                                        indexName: '<?= $viewModel->getIndexName('catalog_category') ?>',
+                                        query,
+                                    },
+                                ],
+                            })
+                        },
+                        templates: {
+                            header() {
+                                return 'Categories'
+                            },
+                            item({ item, components, html }) {
+                                return html`<div class="aa-ItemWrapper">
+                                    <div class="aa-ItemContentTitle">
+                                        ${item.path} (${item.product_count})
+                                    </div>
+                                </div>`;
+                            }
+                        }
+                    }
+                ]
+            },
+        });
+    });
+</script>

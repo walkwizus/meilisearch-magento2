@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="catalog_product" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Index Catalog Product Settings</label>
+        <field id="prefix" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Index Prefix</label>
+        </field>
+        <field id="pagination" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Pagination</label>
+        </field>
+        <field id="ranking_rules" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Ranking Rules</label>
+            <frontend_model>Walkwizus\MeilisearchBase\Block\Adminhtml\System\Config\Form\Field\RankingRules</frontend_model>
+            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+        </field>
+        <field id="typo_tolerance_enabled" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Enable Typo Tolerance</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <comment>Whether typo tolerance is enabled or not</comment>
+        </field>
+        <field id="typo_tolerance_onetypo" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Min word size for one typo</label>
+            <depends>
+                <field id="typo_tolerance_enabled">1</field>
+            </depends>
+            <comment>The minimum word size for accepting 1 typo; must be between 0 and twoTypos</comment>
+        </field>
+        <field id="typo_tolerance_twotypo" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Min word size for two typo</label>
+            <depends>
+                <field id="typo_tolerance_enabled">1</field>
+            </depends>
+            <comment>The minimum word size for accepting 2 typos; must be between oneTypo and 255</comment>
+        </field>
+        <field id="typo_tolerance_disable_on_words" translate="label comment" type="textarea" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Disable on words</label>
+            <depends>
+                <field id="typo_tolerance_enabled">1</field>
+            </depends>
+            <comment>A list of words (comma separated) for which the typo tolerance feature is disabled</comment>
+        </field>
+        <field id="typo_tolerance_disable_on_attributes" translate="label comment" type="multiselect" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Disable on attributes</label>
+            <source_model>Walkwizus\MeilisearchBase\Model\System\Config\Source\SearchableAttributes</source_model>
+            <depends>
+                <field id="typo_tolerance_enabled">1</field>
+            </depends>
+            <comment>A list of attributes for which the typo tolerance feature is disabled</comment>
+        </field>
+        <field id="facets_max_value" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Max values per Facets</label>
+        </field>
+        <field id="facets_sort_by" translate="label comment" type="select" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Sort Facet values by</label>
+            <source_model>Walkwizus\MeilisearchBase\Model\System\Config\Source\SortFacetValuesBy</source_model>
+        </field>
+    </group>
+</include>

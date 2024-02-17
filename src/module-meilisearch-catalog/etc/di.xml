@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="catalogProductSearchIndexHandler" type="Walkwizus\MeilisearchBase\Model\Indexer\BaseIndexerHandler">
+        <arguments>
+            <argument name="indexName" xsi:type="string">catalog_product</argument>
+            <argument name="typeName" xsi:type="string">product</argument>
+            <argument name="indexPrimaryKey" xsi:type="string">id</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\CatalogSearch\Model\Indexer\IndexerHandlerFactory">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="meilisearch" xsi:type="string">catalogProductSearchIndexHandler</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="catalogCategorySearchIndexHandler" type="Walkwizus\MeilisearchBase\Model\Indexer\BaseIndexerHandler">
+        <arguments>
+            <argument name="indexName" xsi:type="string">catalog_category</argument>
+            <argument name="typeName" xsi:type="string">category</argument>
+            <argument name="indexPrimaryKey" xsi:type="string">entity_id</argument>
+        </arguments>
+    </virtualType>
+    <type name="Walkwizus\MeilisearchCatalog\Model\Indexer\Category">
+        <arguments>
+            <argument name="indexerHandler" xsi:type="object">catalogCategorySearchIndexHandler</argument>
+        </arguments>
+    </type>
+    <type name="Walkwizus\MeilisearchBase\Index\AttributeProvider">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="catalog_product" xsi:type="array">
+                    <item name="eav" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeProvider\Product\Eav</item>
+                    <item name="price" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeProvider\Product\Price</item>
+                    <item name="categoryPosition" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeProvider\Product\CategoryPosition</item>
+                </item>
+                <item name="catalog_category" xsi:type="array">
+                    <item name="default" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeProvider\Category\DefaultAttribute</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Walkwizus\MeilisearchBase\Index\AttributeMapper">
+        <arguments>
+            <argument name="mappers" xsi:type="array">
+                <item name="catalog_product" xsi:type="array">
+                    <item name="category" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeMapper\Product\Category</item>
+                    <item name="eav" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeMapper\Product\Eav</item>
+                    <item name="image" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeMapper\Product\Image</item>
+                    <item name="inventory" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeMapper\Product\Inventory</item>
+                    <item name="price" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeMapper\Product\Price</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Walkwizus\MeilisearchBase\Index\AttributeNameResolver">
+        <arguments>
+            <argument name="resolvers" xsi:type="array">
+                <item name="catalog_product" xsi:type="array">
+                    <item name="position" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeNameResolver\Product\CategoryPosition</item>
+                    <item name="price" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeNameResolver\Product\Price</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!--<type name="Walkwizus\MeilisearchCatalog\Index\AttributeMapper\Product\Price">
+        <arguments>
+            <argument name="priceReaderPool" xsi:type="array">
+                <item name="default" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeMapper\Product\Price\PriceDefault</item>
+                <item name="configurable" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeMapper\Product\Price\PriceConfigurable</item>
+                <item name="grouped" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeMapper\Product\Price\PriceGrouped</item>
+                <item name="bundle" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeMapper\Product\Price\PriceGrouped</item>
+            </argument>
+        </arguments>
+    </type>-->
+</config>
