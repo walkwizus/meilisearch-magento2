@@ -38,7 +38,8 @@
         $('.instantsearch-replaced-content').hide();
 
         const searchClient = meilisearch.instantMeiliSearch(
-            '<?= $viewModel->getServerSettingsHelper()->getServerSettingsClientAddress() ?>'
+            '<?= $viewModel->getServerSettingsHelper()->getServerSettingsClientAddress() ?>',
+            '<?= $viewModel->getServerSettingsHelper()->getServerSettingsClientApiKey() ?>'
         ).searchClient;
 
         const search = instantsearch({
