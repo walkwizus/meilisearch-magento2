@@ -8,6 +8,7 @@ use Magento\Framework\Search\AdapterInterface;
 use Walkwizus\MeilisearchBase\SearchAdapter\Aggregation\Builder as AggregationBuilder;
 use Magento\Framework\Search\RequestInterface;
 use Magento\Framework\Search\Response\QueryResponse;
+use Psr\Log\LoggerInterface;
 
 class Adapter implements AdapterInterface
 {
@@ -37,6 +38,11 @@ class Adapter implements AdapterInterface
     protected QueryContainerFactory $queryContainerFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected LoggerInterface $logger;
+
+    /**
      * @param ConnectionManager $connectionManager
      * @param Mapper $mapper
      * @param ResponseFactory $responseFactory
@@ -48,13 +54,15 @@ class Adapter implements AdapterInterface
         Mapper $mapper,
         ResponseFactory $responseFactory,
         AggregationBuilder $aggregationBuilder,
-        QueryContainerFactory $queryContainerFactory
+        QueryContainerFactory $queryContainerFactory,
+        LoggerInterface $logger
     ) {
         $this->connectionManager = $connectionManager;
         $this->mapper = $mapper;
         $this->responseFactory = $responseFactory;
         $this->aggregationBuilder = $aggregationBuilder;
         $this->queryContainerFactory = $queryContainerFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -88,7 +96,7 @@ class Adapter implements AdapterInterface
                 $response['facetDistribution']['facetStats'] = $searchResult->getFacetStats();
             }
         } catch (\Exception $e) {
-
+            $this->logger->critical($e->getMessage());
         }
 
         return $this->responseFactory->create([
