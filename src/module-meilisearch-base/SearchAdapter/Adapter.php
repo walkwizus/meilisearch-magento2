@@ -48,6 +48,7 @@ class Adapter implements AdapterInterface
      * @param ResponseFactory $responseFactory
      * @param AggregationBuilder $aggregationBuilder
      * @param QueryContainerFactory $queryContainerFactory
+     * @param LoggerInterface $logger
      */
     public function __construct(
         ConnectionManager $connectionManager,

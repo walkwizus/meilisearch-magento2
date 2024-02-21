@@ -23,8 +23,8 @@
     <div class="sidebar sidebar-main">
         <div id="clear-refinements"></div>
         <div id="current-refinements"></div>
-        <?php foreach (json_decode($attributes) as $attribute) : ?>
-        <div id="refinement-list-<?= $attribute ?>" style="margin-top: 15px;"></div>
+        <?php foreach (json_decode($attributes) as $code => $label) : ?>
+        <div id="refinement-list-<?= $code ?>" style="margin-top: 15px;"></div>
         <?php endforeach; ?>
     </div>
 </div>
@@ -35,7 +35,7 @@
         'instantMeilisearch',
         'priceUtils'
     ], function($, instantsearch, meilisearch, priceUtils) {
-        $('.instantsearch-replaced-content').hide();
+        //$('.instantsearch-replaced-content').hide();
 
         const searchClient = meilisearch.instantMeiliSearch(
             '<?= $viewModel->getServerSettingsHelper()->getServerSettingsClientAddress() ?>',
@@ -48,9 +48,9 @@
         });
 
         search.addWidgets([
-            /*instantsearch.widgets.searchBox({
+            instantsearch.widgets.searchBox({
                 container: '#searchbox'
-            }),*/
+            }),
             instantsearch.widgets.configure({
                 hitsPerPage: 9,
                 filters: 'category_ids = <?= $block->getCurrentCategory()->getId() ?>'
@@ -140,10 +140,10 @@
 
         const attributes = <?= $attributes ?>;
         const swatches = <?= $swatches ?>;
-        $.each(attributes, function(i, v) {
+        $.each(attributes, function(code, label) {
             const refinementListWithPanel = instantsearch.widgets.panel({
                 templates: {
-                    header: v
+                    header: label
                 },
                 hidden(options) {
                     return !options.canRefine;
@@ -151,8 +151,8 @@
             })(instantsearch.widgets.refinementList);
 
             search.addWidgets([refinementListWithPanel({
-                container: '#refinement-list-' + v,
-                attribute: v,
+                container: '#refinement-list-' + code,
+                attribute: code,
                 sortBy: ['count:desc', 'name:asc'],
                 limit: 5,
                 showMore: true,
@@ -160,9 +160,8 @@
                 templates: {
                     item(item, { html }) {
                         const { url, label, count, isRefined } = item;
-                        const attributeCode = v.replace('_value', '');
-                        if (attributeCode in swatches) {
-                            const swatch = swatches[attributeCode][label];
+                        if (code in swatches) {
+                            const swatch = swatches[code][label];
                             switch(swatch.type) {
                                 case '0':
                                     return html`

@@ -4,29 +4,17 @@ declare(strict_types=1);
 
 namespace Walkwizus\MeilisearchCatalog\Service;
 
-use Magento\Catalog\Model\Session as CatalogSession;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Api\Data\CategoryInterface;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 
 class GetCurrentCategoryService
 {
     /**
-     * @var CategoryInterface|null
+     * @var RequestInterface
      */
-    private ?CategoryInterface $currentCategory = null;
-
-    /**
-     * Current Category ID
-     *
-     * @var int|null
-     */
-    private ?int $categoryId = null;
-
-    /**
-     * @var CatalogSession
-     */
-    private CatalogSession $catalogSession;
+    private RequestInterface $request;
 
     /**
      * @var CategoryRepositoryInterface
@@ -34,14 +22,14 @@ class GetCurrentCategoryService
     private CategoryRepositoryInterface $categoryRepository;
 
     /**
-     * @param CatalogSession $catalogSession
+     * @param RequestInterface $request
      * @param CategoryRepositoryInterface $categoryRepository
      */
     public function __construct(
-        CatalogSession $catalogSession,
+        RequestInterface $request,
         CategoryRepositoryInterface $categoryRepository
     ) {
-        $this->catalogSession = $catalogSession;
+        $this->request = $request;
         $this->categoryRepository = $categoryRepository;
     }
 
@@ -50,32 +38,23 @@ class GetCurrentCategoryService
      */
     public function getCategoryId(): ?int
     {
-        if (is_null($this->categoryId)) {
-            $currentCategoryId = $this->catalogSession->getData('last_viewed_category_id');
-            if ($currentCategoryId) {
-                $this->categoryId = (int)$currentCategoryId;
-            }
-        }
-
-        return $this->categoryId;
+        return (int)$this->request->getParam('id', false);
     }
+
     /**
-     * @return CategoryInterface|null
+     * @return CategoryInterface|false
      */
     public function getCategory(): ?CategoryInterface
     {
-        if (is_null($this->currentCategory)) {
-            $categoryId = $this->getCategoryId();
-            if (!$categoryId) {
-                return null;
-            }
+        $categoryId = $this->getCategoryId();
+        if ($categoryId) {
             try {
-                $this->currentCategory = $this->categoryRepository->get($categoryId);
-            } catch (NoSuchEntityException $e) {
-                return null;
+                return $this->categoryRepository->get($categoryId);
+            } catch (NoSuchEntityException|\Exception $e) {
+                return false;
             }
         }
 
-        return $this->currentCategory;
+        return false;
     }
 }

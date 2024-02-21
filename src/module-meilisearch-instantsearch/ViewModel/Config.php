@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Walkwizus\MeilisearchInstantSearch\ViewModel;
 
+use Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection as AttributeCollection;
 use Walkwizus\MeilisearchBase\Helper\ServerSettings;
 use Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory as AttributeCollectionFactory;
 use Magento\Customer\Api\Data\GroupInterface;
@@ -17,7 +18,6 @@ use Walkwizus\MeilisearchBase\Helper\Data as MeilisearchHelper;
 use Walkwizus\MeilisearchBase\SearchAdapter\SearchIndexNameResolver;
 use Magento\Store\Model\StoreManagerInterface;
 use Walkwizus\MeilisearchBase\Index\AttributeProvider;
-use Walkwizus\MeilisearchCatalog\Service\GetCurrentCategoryService;
 
 class Config implements ArgumentInterface
 {
@@ -67,11 +67,6 @@ class Config implements ArgumentInterface
     protected Data $swatchesHelper;
 
     /**
-     * @var GetCurrentCategoryService
-     */
-    protected GetCurrentCategoryService $getCurrentCategoryService;
-
-    /**
      * @param ServerSettings $serverSettings
      * @param MeilisearchHelper $meilisearchHelper
      * @param SearchIndexNameResolver $searchIndexNameResolver
@@ -81,7 +76,6 @@ class Config implements ArgumentInterface
      * @param Session $customerSession
      * @param AttributeCollectionFactory $attributeCollectionFactory
      * @param Data $swatchesHelper
-     * @param GetCurrentCategoryService $getCurrentCategoryService
      */
     public function __construct(
         ServerSettings $serverSettings,
@@ -92,8 +86,7 @@ class Config implements ArgumentInterface
         Format $localeFormat,
         Session $customerSession,
         AttributeCollectionFactory $attributeCollectionFactory,
-        Data $swatchesHelper,
-        GetCurrentCategoryService $getCurrentCategoryService
+        Data $swatchesHelper
     ) {
         $this->serverSettings = $serverSettings;
         $this->meilisearchHelper = $meilisearchHelper;
@@ -104,7 +97,6 @@ class Config implements ArgumentInterface
         $this->customerSession = $customerSession;
         $this->attributeCollectionFactory = $attributeCollectionFactory;
         $this->swatchesHelper = $swatchesHelper;
-        $this->getCurrentCategoryService = $getCurrentCategoryService;
     }
 
     /**
@@ -139,15 +131,28 @@ class Config implements ArgumentInterface
      */
     public function getRefinementList(): array
     {
-        $attributes = $this->attributeProvider->getFilterableAttributes('catalog_product');
+        $filterableAttributes = $this->attributeProvider->getFilterableAttributes('catalog_product');
 
-        if (count($attributes) > 0) {
-            return array_filter($attributes, function($el) {
-                return strpos($el, '_value');
-            });
+        if (count($filterableAttributes) == 0) {
+            return [];
         }
 
-        return [];
+        $attributesWithSuffix = array_filter($filterableAttributes, function($el) {
+            return strpos($el, '_value');
+        });
+
+        $rawAttributes = array_map(function($attributeCode) {
+            return str_replace('_value', '', $attributeCode);
+        }, $attributesWithSuffix);
+
+        $attributes = $this->getAttributeByCodes($rawAttributes);
+
+        $refinementList = [];
+        foreach ($attributes as $attribute) {
+            $refinementList[$attribute->getAttributeCode() . '_value'] = $attribute->getStoreLabel();
+        }
+
+        return $refinementList;
     }
 
     /**
@@ -161,8 +166,7 @@ class Config implements ArgumentInterface
             return str_replace('_value', '', $attributeCode);
         }, $this->getRefinementList());
 
-        $attributes = $this->attributeCollectionFactory->create()
-            ->addFieldToFilter('attribute_code', ['in' => $attributeCodes]);
+        $attributes = $this->getAttributeByCodes($attributeCodes);
         foreach ($attributes as $attribute) {
             if ($this->swatchesHelper->isSwatchAttribute($attribute)) {
                 foreach ($attribute->getSource()->getAllOptions(false) as $option) {
@@ -228,10 +232,13 @@ class Config implements ArgumentInterface
     }
 
     /**
-     * @return int|null
+     * @param array $attributeCodes
+     * @return AttributeCollection
      */
-    public function getCurrentCategoryId()
+    protected function getAttributeByCodes(array $attributeCodes): AttributeCollection
     {
-        return $this->getCurrentCategoryService->getCategoryId();
+        return $this->attributeCollectionFactory
+            ->create()
+            ->addFieldToFilter('attribute_code', ['in' => $attributeCodes]);
     }
 }
