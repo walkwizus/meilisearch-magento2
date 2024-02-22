@@ -77,7 +77,7 @@ class BaseIndexerHandler implements IndexerInterface
         string $indexName,
         string $typeName,
         SettingsInterface $settings,
-        int $batchSize = 10,
+        int $batchSize = 10000,
         string $indexPrimaryKey = 'id'
     ) {
         $this->meilisearchAdapter = $meilisearchAdapter;

@@ -185,7 +185,7 @@ class Config implements ArgumentInterface
     public function getProductMediaUrl(): string
     {
         try {
-            return $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . '/catalog/product';
+            return $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product';
         } catch (\Exception $e) {
             return '';
         }
