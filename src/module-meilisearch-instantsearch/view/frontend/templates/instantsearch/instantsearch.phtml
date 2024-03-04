@@ -23,8 +23,8 @@
     <div class="sidebar sidebar-main">
         <div id="clear-refinements"></div>
         <div id="current-refinements"></div>
-        <?php foreach (json_decode($attributes) as $code => $label) : ?>
-        <div id="refinement-list-<?= $code ?>" style="margin-top: 15px;"></div>
+        <?php foreach (json_decode($attributes) as $attribute) : ?>
+        <div id="refinement-list-<?= $attribute->code ?>" style="margin-top: 15px;"></div>
         <?php endforeach; ?>
     </div>
 </div>
@@ -35,8 +35,6 @@
         'instantMeilisearch',
         'priceUtils'
     ], function($, instantsearch, meilisearch, priceUtils) {
-        //$('.instantsearch-replaced-content').hide();
-
         const searchClient = meilisearch.instantMeiliSearch(
             '<?= $viewModel->getServerSettingsHelper()->getServerSettingsClientAddress() ?>',
             '<?= $viewModel->getServerSettingsHelper()->getServerSettingsClientApiKey() ?>'
@@ -140,28 +138,46 @@
 
         const attributes = <?= $attributes ?>;
         const swatches = <?= $swatches ?>;
-        $.each(attributes, function(code, label) {
+        $.each(attributes, function(i, v) {
             const refinementListWithPanel = instantsearch.widgets.panel({
                 templates: {
-                    header: label
+                    header: v['label']
                 },
                 hidden(options) {
                     return !options.canRefine;
                 }
             })(instantsearch.widgets.refinementList);
 
-            search.addWidgets([refinementListWithPanel({
-                container: '#refinement-list-' + code,
-                attribute: code,
+            const refinementListConfig = {
+                container: '#refinement-list-' + v['code'],
+                attribute: v['code'],
+                operator: v['operator'],
+                showMore: v['show_more'] == '0' ? false : true,
+                searchable: v['searchable'] == '0' ? false : true,
+                searchableIsAlwaysActive: v['searchable_is_always_active'] == '0' ? false : true,
+                searchableEscapeValues: v['searchable_escape_facet_values'] == '0' ? false : true,
                 sortBy: ['count:desc', 'name:asc'],
-                limit: 5,
-                showMore: true,
-                searchable: true,
+            };
+
+            if (v['show_more'] != '0') {
+                if (v['show_more_limit'] != '0') {
+                    refinementListConfig.showMoreLimit = v['show_more_limit'];
+                } else {
+                    refinementListConfig.showMore = false;
+                }
+            }
+
+            if (v['limit'] != '0') {
+                refinementListConfig.limit = v['limit'];
+            }
+
+            search.addWidgets([refinementListWithPanel({
+                ...refinementListConfig,
                 templates: {
                     item(item, { html }) {
                         const { url, label, count, isRefined } = item;
-                        if (code in swatches) {
-                            const swatch = swatches[code][label];
+                        if (v['code'] in swatches) {
+                            const swatch = swatches[v['code']][v['label']];
                             switch(swatch.type) {
                                 case '0':
                                     return html`

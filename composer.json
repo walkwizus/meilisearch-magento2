@@ -26,18 +26,21 @@
     "replace": {
         "walkwizus/module-meilisearch-base": "self.version",
         "walkwizus/module-meilisearch-catalog": "self.version",
-        "walkwizus/module-meilisearch-instantsearch": "self.version"
+        "walkwizus/module-meilisearch-instantsearch": "self.version",
+        "walkwizus/module-meilisearch-merchandising": "self.version"
     },
     "autoload": {
         "files": [
             "src/module-meilisearch-base/registration.php",
             "src/module-meilisearch-catalog/registration.php",
-            "src/module-meilisearch-instantsearch/registration.php"
+            "src/module-meilisearch-instantsearch/registration.php",
+            "src/module-meilisearch-merchandising/registration.php"
         ],
         "psr-4": {
             "Walkwizus\\MeilisearchBase\\": "src/module-meilisearch-base",
             "Walkwizus\\MeilisearchCatalog\\": "src/module-meilisearch-catalog",
-            "Walkwizus\\MeilisearchInstantSearch\\": "src/module-meilisearch-instantsearch"
+            "Walkwizus\\MeilisearchInstantSearch\\": "src/module-meilisearch-instantsearch",
+            "Walkwizus\\MeilisearchMerchandising\\": "src/module-meilisearch-merchandising"
         }
     }
 }

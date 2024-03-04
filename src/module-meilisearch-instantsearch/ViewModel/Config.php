@@ -4,100 +4,49 @@ declare(strict_types=1);
 
 namespace Walkwizus\MeilisearchInstantSearch\ViewModel;
 
-use Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection as AttributeCollection;
-use Walkwizus\MeilisearchBase\Helper\ServerSettings;
-use Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory as AttributeCollectionFactory;
-use Magento\Customer\Api\Data\GroupInterface;
-use Magento\Customer\Model\Session;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Locale\Format;
-use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
-use Magento\Swatches\Helper\Data;
+use Walkwizus\MeilisearchBase\Helper\ServerSettings;
 use Walkwizus\MeilisearchBase\Helper\Data as MeilisearchHelper;
 use Walkwizus\MeilisearchBase\SearchAdapter\SearchIndexNameResolver;
 use Magento\Store\Model\StoreManagerInterface;
-use Walkwizus\MeilisearchBase\Index\AttributeProvider;
+use Magento\Framework\Locale\Format;
+use Magento\Customer\Model\Session;
+use Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory as AttributeCollectionFactory;
+use Magento\Swatches\Helper\Data;
+use Walkwizus\MeilisearchCatalog\Service\GetRefinementListService;
+use Walkwizus\MeilisearchMerchandising\Api\FacetRepositoryInterface;
+use Walkwizus\MeilisearchMerchandising\Model\ResourceModel\FacetAttribute\CollectionFactory as FacetAttributeCollectionFactory;
+use Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection as AttributeCollection;
+use Magento\Customer\Api\Data\GroupInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\UrlInterface;
 
 class Config implements ArgumentInterface
 {
-    /**
-     * @var ServerSettings
-     */
-    protected ServerSettings $serverSettings;
-
-    /**
-     * @var MeilisearchHelper
-     */
-    protected MeilisearchHelper $meilisearchHelper;
-
-    /**
-     * @var SearchIndexNameResolver
-     */
-    protected SearchIndexNameResolver $searchIndexNameResolver;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    protected StoreManagerInterface $storeManager;
-
-    /**
-     * @var AttributeProvider
-     */
-    protected AttributeProvider $attributeProvider;
-
-    /**
-     * @var Format
-     */
-    protected Format $localeFormat;
-
-    /**
-     * @var Session
-     */
-    protected Session $customerSession;
-
-    /**
-     * @var AttributeCollectionFactory
-     */
-    protected AttributeCollectionFactory $attributeCollectionFactory;
-
-    /**
-     * @var Data
-     */
-    protected Data $swatchesHelper;
-
     /**
      * @param ServerSettings $serverSettings
      * @param MeilisearchHelper $meilisearchHelper
      * @param SearchIndexNameResolver $searchIndexNameResolver
      * @param StoreManagerInterface $storeManager
-     * @param AttributeProvider $attributeProvider
      * @param Format $localeFormat
      * @param Session $customerSession
      * @param AttributeCollectionFactory $attributeCollectionFactory
      * @param Data $swatchesHelper
+     * @param GetRefinementListService $getRefinementListService
      */
     public function __construct(
-        ServerSettings $serverSettings,
-        MeilisearchHelper $meilisearchHelper,
-        SearchIndexNameResolver $searchIndexNameResolver,
-        StoreManagerInterface $storeManager,
-        AttributeProvider $attributeProvider,
-        Format $localeFormat,
-        Session $customerSession,
-        AttributeCollectionFactory $attributeCollectionFactory,
-        Data $swatchesHelper
-    ) {
-        $this->serverSettings = $serverSettings;
-        $this->meilisearchHelper = $meilisearchHelper;
-        $this->searchIndexNameResolver = $searchIndexNameResolver;
-        $this->storeManager = $storeManager;
-        $this->attributeProvider = $attributeProvider;
-        $this->localeFormat = $localeFormat;
-        $this->customerSession = $customerSession;
-        $this->attributeCollectionFactory = $attributeCollectionFactory;
-        $this->swatchesHelper = $swatchesHelper;
-    }
+        private ServerSettings $serverSettings,
+        private MeilisearchHelper $meilisearchHelper,
+        private SearchIndexNameResolver $searchIndexNameResolver,
+        private StoreManagerInterface $storeManager,
+        private Format $localeFormat,
+        private Session $customerSession,
+        private AttributeCollectionFactory $attributeCollectionFactory,
+        private Data $swatchesHelper,
+        private GetRefinementListService $getRefinementListService,
+        private FacetRepositoryInterface $facetRepository,
+        private FacetAttributeCollectionFactory $facetAttributeCollectionFactory
+    ) { }
 
     /**
      * @return MeilisearchHelper
@@ -131,28 +80,20 @@ class Config implements ArgumentInterface
      */
     public function getRefinementList(): array
     {
-        $filterableAttributes = $this->attributeProvider->getFilterableAttributes('catalog_product');
+        try {
+            $facet = $this->facetRepository->getByIndex('catalog_product');
+            $facetAttributeCollection = $this->facetAttributeCollectionFactory
+                ->create()
+                ->addFieldToFilter('facet_id', $facet->getId())
+                ->setOrder('position', 'ASC');
+            if ($facetAttributeCollection->getSize() > 0) {
+                return $facetAttributeCollection->toArray()['items'];
+            }
+        } catch (\Exception $e) {
 
-        if (count($filterableAttributes) == 0) {
-            return [];
         }
 
-        $attributesWithSuffix = array_filter($filterableAttributes, function($el) {
-            return strpos($el, '_value');
-        });
-
-        $rawAttributes = array_map(function($attributeCode) {
-            return str_replace('_value', '', $attributeCode);
-        }, $attributesWithSuffix);
-
-        $attributes = $this->getAttributeByCodes($rawAttributes);
-
-        $refinementList = [];
-        foreach ($attributes as $attribute) {
-            $refinementList[$attribute->getAttributeCode() . '_value'] = $attribute->getStoreLabel();
-        }
-
-        return $refinementList;
+        return [];
     }
 
     /**
