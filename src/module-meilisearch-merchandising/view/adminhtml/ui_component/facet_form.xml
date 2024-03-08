@@ -122,7 +122,7 @@
                     <settings>
                         <validation>
                             <rule name="required-entry" xsi:type="boolean">true</rule>
-                            <!--<rule name="validate-digits" xsi:type="boolean">true</rule>-->
+                            <rule name="validate-digits" xsi:type="boolean">true</rule>
                         </validation>
                         <dataType>number</dataType>
                         <label>Show More Limit</label>
@@ -135,38 +135,6 @@
                         </validation>
                         <dataType>boolean</dataType>
                         <label translate="true">Searchable</label>
-                    </settings>
-                    <formElements>
-                        <select>
-                            <settings>
-                                <options class="Magento\Config\Model\Config\Source\Yesno"/>
-                            </settings>
-                        </select>
-                    </formElements>
-                </field>
-                <field name="searchable_is_always_active" component="Magento_Ui/js/form/element/select" formElement="select">
-                    <settings>
-                        <validation>
-                            <rule name="required-entry" xsi:type="boolean">true</rule>
-                        </validation>
-                        <dataType>boolean</dataType>
-                        <label translate="true">Searchable is always active</label>
-                    </settings>
-                    <formElements>
-                        <select>
-                            <settings>
-                                <options class="Magento\Config\Model\Config\Source\Yesno"/>
-                            </settings>
-                        </select>
-                    </formElements>
-                </field>
-                <field name="searchable_escape_facet_values" component="Magento_Ui/js/form/element/select" formElement="select">
-                    <settings>
-                        <validation>
-                            <rule name="required-entry" xsi:type="boolean">true</rule>
-                        </validation>
-                        <dataType>boolean</dataType>
-                        <label translate="true">Searchable escape facet values</label>
                     </settings>
                     <formElements>
                         <select>

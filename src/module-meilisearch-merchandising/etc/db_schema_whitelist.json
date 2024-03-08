@@ -1,0 +1,41 @@
+{
+    "meilisearch_merchandising_category": {
+        "column": {
+            "id": true,
+            "category_id": true,
+            "query": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "meilisearch_merchandising_facet": {
+        "column": {
+            "id": true,
+            "index_name": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MEILISEARCH_MERCHANDISING_FACET_INDEX_NAME": true
+        }
+    },
+    "meilisearch_merchandising_facet_attribute": {
+        "column": {
+            "id": true,
+            "label": true,
+            "code": true,
+            "position": true,
+            "operator": true,
+            "limit": true,
+            "show_more": true,
+            "show_more_limit": true,
+            "searchable": true,
+            "facet_id": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MEILISEARCH_MERCHANDISING_FACET_ATTRIBUTE_CODE_FACET_ID": true,
+            "FK_5955EAD6A8BA07324BA1FC05ADB7B436": true
+        }
+    }
+}

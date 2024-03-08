@@ -29,8 +29,6 @@
         <column xsi:type="boolean" name="show_more" nullable="false" comment="Show More"/>
         <column xsi:type="int" name="show_more_limit" padding="11" nullable="false" comment="Show More Limit"/>
         <column xsi:type="boolean" name="searchable" nullable="false" comment="Searchable"/>
-        <column xsi:type="boolean" name="searchable_is_always_active" nullable="false" comment="Searchable Is Always Active"/>
-        <column xsi:type="boolean" name="searchable_escape_facet_values" nullable="false" comment="Searchable Escape Facet values"/>
         <column xsi:type="int" name="facet_id" padding="10" unsigned="true" nullable="false" comment="Facet Id"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
