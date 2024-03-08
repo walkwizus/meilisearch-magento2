@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Walkwizus\MeilisearchInstantSearch\ViewModel;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
+use Magento\Store\Model\ScopeInterface;
 use Walkwizus\MeilisearchBase\Helper\ServerSettings;
 use Walkwizus\MeilisearchBase\Helper\Data as MeilisearchHelper;
 use Walkwizus\MeilisearchBase\SearchAdapter\SearchIndexNameResolver;
@@ -13,7 +15,6 @@ use Magento\Framework\Locale\Format;
 use Magento\Customer\Model\Session;
 use Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory as AttributeCollectionFactory;
 use Magento\Swatches\Helper\Data;
-use Walkwizus\MeilisearchCatalog\Service\GetRefinementListService;
 use Walkwizus\MeilisearchMerchandising\Api\FacetRepositoryInterface;
 use Walkwizus\MeilisearchMerchandising\Model\ResourceModel\FacetAttribute\CollectionFactory as FacetAttributeCollectionFactory;
 use Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection as AttributeCollection;
@@ -27,12 +28,12 @@ class Config implements ArgumentInterface
      * @param ServerSettings $serverSettings
      * @param MeilisearchHelper $meilisearchHelper
      * @param SearchIndexNameResolver $searchIndexNameResolver
+     * @param ScopeConfigInterface $scopeConfig
      * @param StoreManagerInterface $storeManager
      * @param Format $localeFormat
      * @param Session $customerSession
      * @param AttributeCollectionFactory $attributeCollectionFactory
      * @param Data $swatchesHelper
-     * @param GetRefinementListService $getRefinementListService
      * @param FacetRepositoryInterface $facetRepository
      * @param FacetAttributeCollectionFactory $facetAttributeCollectionFactory
      */
@@ -40,12 +41,12 @@ class Config implements ArgumentInterface
         private ServerSettings $serverSettings,
         private MeilisearchHelper $meilisearchHelper,
         private SearchIndexNameResolver $searchIndexNameResolver,
+        private ScopeConfigInterface $scopeConfig,
         private StoreManagerInterface $storeManager,
         private Format $localeFormat,
         private Session $customerSession,
         private AttributeCollectionFactory $attributeCollectionFactory,
         private Data $swatchesHelper,
-        private GetRefinementListService $getRefinementListService,
         private FacetRepositoryInterface $facetRepository,
         private FacetAttributeCollectionFactory $facetAttributeCollectionFactory
     ) { }
@@ -172,6 +173,16 @@ class Config implements ArgumentInterface
         return $this->customerSession->isLoggedIn()
             ? $this->customerSession->getCustomer()->getGroupId()
             : GroupInterface::NOT_LOGGED_IN_ID;
+    }
+
+    /**
+     * @param string $viewMode
+     * @return int
+     */
+    public function getHitPerPage(string $viewMode = 'grid'): int
+    {
+        $perPageConfigPath = 'catalog/frontend/' . $viewMode . '_per_page';
+        return (int)$this->scopeConfig->getValue($perPageConfigPath, ScopeInterface::SCOPE_STORE);
     }
 
     /**

@@ -50,7 +50,7 @@
                 container: '#searchbox'
             }),
             instantsearch.widgets.configure({
-                hitsPerPage: 9,
+                hitsPerPage: <?= $viewModel->getHitPerPage() ?>,
                 filters: 'category_ids = <?= $block->getCurrentCategory()->getId() ?>'
             }),
             instantsearch.widgets.stats({
