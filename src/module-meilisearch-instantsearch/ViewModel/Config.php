@@ -33,6 +33,8 @@ class Config implements ArgumentInterface
      * @param AttributeCollectionFactory $attributeCollectionFactory
      * @param Data $swatchesHelper
      * @param GetRefinementListService $getRefinementListService
+     * @param FacetRepositoryInterface $facetRepository
+     * @param FacetAttributeCollectionFactory $facetAttributeCollectionFactory
      */
     public function __construct(
         private ServerSettings $serverSettings,

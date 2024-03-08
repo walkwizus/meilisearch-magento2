@@ -14,16 +14,6 @@ use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
 class Builder extends Template
 {
     /**
-     * @var AttributeCollectionFactory
-     */
-    protected AttributeCollectionFactory $attributeCollectionFactory;
-
-    /**
-     * @var AttributeRepositoryInterface
-     */
-    protected AttributeRepositoryInterface $attributeRepository;
-
-    /**
      * @param Template\Context $context
      * @param AttributeCollectionFactory $attributeCollectionFactory
      * @param AttributeRepositoryInterface $attributeRepository
@@ -33,14 +23,12 @@ class Builder extends Template
      */
     public function __construct(
         Template\Context $context,
-        AttributeCollectionFactory $attributeCollectionFactory,
-        AttributeRepositoryInterface $attributeRepository,
+        private AttributeCollectionFactory $attributeCollectionFactory,
+        private AttributeRepositoryInterface $attributeRepository,
         array $data = [],
         ?JsonHelper $jsonHelper = null,
         ?DirectoryHelper $directoryHelper = null
     ) {
-        $this->attributeCollectionFactory = $attributeCollectionFactory;
-        $this->attributeRepository = $attributeRepository;
         parent::__construct($context, $data, $jsonHelper, $directoryHelper);
     }
 

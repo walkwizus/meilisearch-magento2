@@ -10,17 +10,11 @@ use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 class Back implements ButtonProviderInterface
 {
     /**
-     * @var UrlInterface
+     * @param UrlInterface $urlBuilder
      */
-    private UrlInterface $urlBuilder;
-
-    /**
-     * @param UrlInterface $url
-     */
-    public function __construct(UrlInterface $url)
-    {
-        $this->urlBuilder = $url;
-    }
+    public function __construct(
+        private UrlInterface $urlBuilder
+    ) { }
 
     /**
      * @return array

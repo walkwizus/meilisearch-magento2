@@ -17,13 +17,11 @@ class GetRefinementListService
     /**
      * @param AttributeProvider $attributeProvider
      * @param AttributeCollectionFactory $attributeCollectionFactory
-     * @param AttributeCollection $attributeCollection
      * @param State $state
      */
     public function __construct(
         private AttributeProvider $attributeProvider,
         private AttributeCollectionFactory $attributeCollectionFactory,
-        private AttributeCollection $attributeCollection,
         private State $state
     ) { }
 
