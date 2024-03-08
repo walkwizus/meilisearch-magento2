@@ -13,7 +13,7 @@
             <block name="merch.category.tree" class="Walkwizus\MeilisearchMerchandising\Block\Adminhtml\Category\Tree" template="Walkwizus_MeilisearchMerchandising::category/tree.phtml"/>
         </referenceContainer>
         <referenceContainer name="content">
-            <block name="merch.query.builder" class="Walkwizus\MeilisearchMerchandising\Block\Adminhtml\Category\Query\Builder" template="Walkwizus_MeilisearchMerchandising::category/query/builder.phtml"/>
+            <block name="merch.category.query.builder" class="Walkwizus\MeilisearchMerchandising\Block\Adminhtml\Category\Query\Builder" template="Walkwizus_MeilisearchMerchandising::category/query/builder.phtml"/>
         </referenceContainer>
     </body>
 </page>

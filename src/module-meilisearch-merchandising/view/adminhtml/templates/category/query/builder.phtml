@@ -1,15 +1,23 @@
 <?php /** @var \Walkwizus\MeilisearchMerchandising\Block\Adminhtml\Category\Query\Builder $block */?>
-<form id="category-merchandising-form" action="<?= $block->getPostUrl() ?>" method="post">
-    <input type="submit" name="Save"/>
+<form id="category-merchandising-form" action="<?= $block->getSaveRuleUrl() ?>" method="post">
+    <button type="submit" id="save-rule" title="<?= __('Save Rule') ?>" class="save primary">
+        <span><?= __('Save Rule') ?></span>
+    </button>
+    <button type="button" id="apply-rule" title="<?= __('Apply Rule') ?>" class="save secondary">
+        <span><?= __('Apply Rule') ?></span>
+    </button>
+    <button type="button" id="delete-rule" title="<?= __('Apply Rule') ?>" class="save secondary">
+        <span><?= __('Delete Rule') ?></span>
+    </button>
     <input type="hidden" id="category_id" name="category_id"/>
     <div id="query-builder"></div>
 </form>
+<div id="category-merchandising-product"></div>
 <div id="modal">
     <div class="modal-body-content">
         content
     </div>
 </div>
-
 <script>
     requirejs([
         'jquery',
@@ -17,6 +25,57 @@
         'Magento_Ui/js/modal/modal',
         'prototype'
     ], function($, queryBuilder, modal) {
+        let qb = $('#query-builder').queryBuilder({
+            filters: <?= $this->getFilters() ?>
+        });
+
+        $('#category-merchandising-form').submit(function(e) {
+            e.preventDefault();
+            let rules = qb.queryBuilder('getRules');
+            let categoryId = $('#category_id').val();
+
+            if (rules && rules.valid && categoryId > 0) {
+                $.ajax(this.action, {
+                    showLoader: true,
+                    dataType: 'json',
+                    data: {
+                        form_key: window.FORM_KEY,
+                        rules: rules,
+                        category_id: categoryId
+                    }
+                });
+            }
+        });
+
+        $('#apply-rule').on('click', function() {
+            let rules = qb.queryBuilder('getRules');
+
+            if (rules && rules.valid) {
+                $.ajax('<?= $block->getPreviewUrl() ?>', {
+                    showLoader: true,
+                    dataType: 'json',
+                    data: {
+                        form_key: window.FORM_KEY,
+                        rules: rules
+                    },
+                    success: function(response) {
+                        let previewContainer = $('#category-merchandising-product');
+                        previewContainer.html('<ul>');
+
+                        $.each(response.hits, function(i, v) {
+                            previewContainer.append('<li>' + v.name + ' (' + v.sku + ')</li>');
+                        });
+
+                        previewContainer.append('</ul>');
+                    }
+                });
+            }
+        });
+
+        qb.on('afterSetRules.queryBuilder', function() {
+            $('#apply-rule').click();
+        });
+
         let options = {
             type: 'slide',
             responsive: true,
@@ -41,9 +100,7 @@
             }
         };
 
-        modal(options, $('#modal'));
-
-        $('#query-builder').on('afterUpdateRuleFilter.queryBuilder', function(e, rule) {
+        qb.on('afterUpdateRuleFilter.queryBuilder', function(e, rule) {
             if (rule.filter.id === 'sku') {
                 let input = $(rule.$el).find('.rule-value-container input');
                 let button = $('<button>').text('Mon Bouton').addClass('btn btn-primary');
@@ -55,25 +112,7 @@
                 });
             }
         });
-        $('#query-builder').queryBuilder({
-            filters: <?= $this->getFilters() ?>
-        });
 
-        $('#category-merchandising-form').submit(function(e) {
-            e.preventDefault();
-            let rules = $('#query-builder').queryBuilder('getRules');
-            let categoryId = $('#category_id').val();
-            if (rules) {
-                $.ajax(this.action, {
-                    data: {
-                        form_key: window.FORM_KEY,
-                        rules: rules,
-                        category_id: categoryId
-                    },
-                    showLoader: true,
-                    dataType: 'json'
-                });
-            }
-        });
+        modal(options, $('#modal'));
     });
 </script>

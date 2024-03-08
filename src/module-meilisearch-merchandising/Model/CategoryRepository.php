@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Walkwizus\MeilisearchMerchandising\Model;
 
+use Magento\Framework\Exception\CouldNotDeleteException;
 use Walkwizus\MeilisearchMerchandising\Api\CategoryRepositoryInterface;
 use Walkwizus\MeilisearchMerchandising\Model\ResourceModel\Category;
 use Walkwizus\MeilisearchMerchandising\Api\Data\CategoryInterface;
@@ -69,5 +70,14 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         return $category;
+    }
+
+    public function deleteByCategoryId($categoryId): void
+    {
+        try {
+            $this->categoryResource->delete($categoryId);
+        } catch (\Exception $e) {
+            throw new CouldNotDeleteException(__($e->getMessage()));
+        }
     }
 }

@@ -76,6 +76,6 @@ class Tree extends Template
      */
     public function getAjaxUrl(): string
     {
-        return $this->getUrl('meilisearch_merchandising/category/ajax_getRule');
+        return $this->getUrl('meilisearch_merchandising/category/ajax_getrule');
     }
 }

@@ -23,6 +23,14 @@ class Builder extends Template
      */
     protected AttributeRepositoryInterface $attributeRepository;
 
+    /**
+     * @param Template\Context $context
+     * @param AttributeCollectionFactory $attributeCollectionFactory
+     * @param AttributeRepositoryInterface $attributeRepository
+     * @param array $data
+     * @param JsonHelper|null $jsonHelper
+     * @param DirectoryHelper|null $directoryHelper
+     */
     public function __construct(
         Template\Context $context,
         AttributeCollectionFactory $attributeCollectionFactory,
@@ -36,19 +44,40 @@ class Builder extends Template
         parent::__construct($context, $data, $jsonHelper, $directoryHelper);
     }
 
-    public function getPostUrl()
+    /**
+     * @return string
+     */
+    public function getSaveRuleUrl(): string
     {
-        return $this->getUrl('meilisearch_merchandising/category/save');
+        return $this->getUrl('meilisearch_merchandising/category/ajax_saverule');
     }
 
-    public function getFilters()
+    /**
+     * @return string
+     */
+    public function getPreviewUrl(): string
+    {
+        return $this->getUrl('meilisearch_merchandising/category/ajax_preview');
+    }
+
+    /**
+     * @return false|string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getFilters(): bool|string
     {
         $attributes = $this->getAttributes();
         $rules = $this->transformAttributesToRules($attributes);
+
         return json_encode($rules);
     }
 
-    protected function transformAttributesToRules($attributes)
+    /**
+     * @param $attributes
+     * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    protected function transformAttributesToRules($attributes): array
     {
         $rules = [];
 
@@ -82,7 +111,12 @@ class Builder extends Template
         return $rules;
     }
 
-    protected function getSelectValues($attributeCode)
+    /**
+     * @param $attributeCode
+     * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    protected function getSelectValues($attributeCode): array
     {
         $values = [];
         $attribute = $this->attributeRepository->get('catalog_product', $attributeCode);
@@ -97,7 +131,10 @@ class Builder extends Template
         return $values;
     }
 
-    protected function getAttributes()
+    /**
+     * @return array
+     */
+    protected function getAttributes(): array
     {
         $attributes = $this->attributeCollectionFactory
             ->create()
@@ -113,10 +150,5 @@ class Builder extends Template
         }
 
         return $data;
-    }
-
-    protected function getAttributeSetId()
-    {
-
     }
 }

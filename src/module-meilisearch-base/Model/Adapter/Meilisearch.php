@@ -7,6 +7,7 @@ namespace Walkwizus\MeilisearchBase\Model\Adapter;
 use Meilisearch\Client;
 use Walkwizus\MeilisearchBase\SearchAdapter\ConnectionManager;
 use Walkwizus\MeilisearchBase\SearchAdapter\SearchIndexNameResolver;
+use Meilisearch\Search\SearchResult;
 use Magento\Framework\Exception\LocalizedException;
 
 class Meilisearch
@@ -43,6 +44,19 @@ class Meilisearch
         } catch (\Exception $e) {
             throw new LocalizedException(__('The search failed because of a search engine misconfiguration.'));
         }
+    }
+
+    /**
+     * @param $storeId
+     * @param $index
+     * @param string $query
+     * @param array $filter
+     * @return SearchResult
+     */
+    public function search($storeId, $index, string $query = '', array $filter = []): SearchResult
+    {
+        $indexName = $this->getIndexName($storeId, $index);
+        return $this->client->index($indexName)->search($query, ['filter' => $filter]);
     }
 
     /**
@@ -84,6 +98,11 @@ class Meilisearch
         return $this;
     }
 
+    /**
+     * @param $storeId
+     * @param $mappedIndexerId
+     * @return void
+     */
     public function deleteIndex($storeId, $mappedIndexerId)
     {
         $indexName = $this->getIndexName($storeId, $mappedIndexerId);

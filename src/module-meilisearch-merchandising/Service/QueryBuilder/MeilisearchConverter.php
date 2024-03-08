@@ -19,32 +19,51 @@ class MeilisearchConverter
         'greater' => '>',
         'greater_or_equal' => '>=',
         'between' => 'TO',
-        //'not_between',
         'is_null' => 'IS NULL',
         'is_not_null' => 'IS NOT NULL'
     ];
 
-    public function buildMeilisearchQuery($rule)
+    /**
+     * @param array $rule
+     * @return array
+     */
+    public function buildMeilisearchQuery(array $rule): array
     {
-        if (isset($rule['condition'])) {
-            $subQueries = array_map([$this, 'buildMeilisearchQuery'], $rule['rules']);
-            $condition = strtolower($rule['condition']);
-            return '(' . implode(" $condition ", $subQueries) . ')';
+        if (!$rule['valid']) {
+            return [];
+        }
+
+        return $this->buildQuery($rule);
+    }
+
+    /**
+     * @param array $rule
+     * @return array
+     */
+    private function buildQuery(array $rule): array
+    {
+        $meilisearchQuery = [];
+        $condition = $rule['condition'] ?? 'AND';
+
+        if (isset($rule['rules']) && is_array($rule['rules'])) {
+            foreach ($rule['rules'] as $subRule) {
+                $subQuery = $this->buildQuery($subRule);
+                if (!empty($subQuery)) {
+                    $meilisearchQuery[] = $subQuery;
+                }
+            }
         } else {
             $field = $rule['field'];
-            $operator = strtolower($rule['operator']);
+            $operator = $this->operatorMapper[$rule['operator']];
             $value = $rule['value'];
 
-            switch ($operator) {
-                case 'equal':
-                    return "$field:$value";
-                case 'not_equal':
-                    return "$field:NOT $value";
-                case 'not_in':
-                    return "NOT $field:$value";
-                default:
-                    return '';
-            }
+            $meilisearchQuery[] = "$field $operator $value";
         }
+
+        if (!empty($meilisearchQuery)) {
+            return ($condition === 'OR') ? [$meilisearchQuery] : $meilisearchQuery;
+        }
+
+        return [];
     }
 }

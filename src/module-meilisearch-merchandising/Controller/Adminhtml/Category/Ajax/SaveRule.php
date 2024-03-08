@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Walkwizus\MeilisearchMerchandising\Controller\Adminhtml\Category;
+namespace Walkwizus\MeilisearchMerchandising\Controller\Adminhtml\Category\Ajax;
 
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
@@ -11,8 +11,9 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Walkwizus\MeilisearchMerchandising\Model\CategoryFactory;
 use Walkwizus\MeilisearchMerchandising\Api\CategoryRepositoryInterface;
+use Magento\Framework\Controller\ResultInterface;
 
-class Save extends Action implements HttpPostActionInterface
+class SaveRule extends Action implements HttpPostActionInterface
 {
     /**
      * @param Context $context
@@ -29,7 +30,10 @@ class Save extends Action implements HttpPostActionInterface
         parent::__construct($context);
     }
 
-    public function execute()
+    /**
+     * @return ResultInterface
+     */
+    public function execute(): ResultInterface
     {
         $categoryId = $this->getRequest()->getParam('category_id', false);
         $rules = $this->getRequest()->getParam('rules', false);

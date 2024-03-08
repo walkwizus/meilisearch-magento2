@@ -27,4 +27,10 @@ interface CategoryRepositoryInterface
      * @return CategoryInterface
      */
     public function save(CategoryInterface $category): CategoryInterface;
+
+    /**
+     * @param $categoryId
+     * @return void
+     */
+    public function deleteByCategoryId($categoryId): void;
 }
