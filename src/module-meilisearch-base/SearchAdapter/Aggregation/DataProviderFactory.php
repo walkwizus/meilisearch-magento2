@@ -12,19 +12,11 @@ use Walkwizus\MeilisearchBase\SearchAdapter\QueryContainer;
 class DataProviderFactory
 {
     /**
-     * Object Manager
-     *
-     * @var ObjectManagerInterface
-     */
-    private ObjectManagerInterface $objectManager;
-
-    /**
      * @param ObjectManagerInterface $objectManager
      */
-    public function __construct(ObjectManagerInterface $objectManager)
-    {
-        $this->objectManager = $objectManager;
-    }
+    public function __construct(
+        private ObjectManagerInterface $objectManager
+    ) { }
 
     public function create(
         DataProviderInterface $dataProvider,

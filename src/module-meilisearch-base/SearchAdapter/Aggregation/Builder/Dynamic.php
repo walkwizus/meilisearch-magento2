@@ -16,34 +16,15 @@ use Magento\Framework\Search\Dynamic\Algorithm\Improved;
 class Dynamic implements BucketBuilderInterface
 {
     /**
-     * @var Repository
-     */
-    protected Repository $algorithmRepository;
-
-    /**
-     * @var EntityStorageFactory
-     */
-    protected EntityStorageFactory $entityStorageFactory;
-
-    /**
-     * @var CustomerSession
-     */
-    protected CustomerSession $customerSession;
-
-    /**
      * @param Repository $algorithmRepository
      * @param EntityStorageFactory $entityStorageFactory
      * @param CustomerSession $customerSession
      */
     public function __construct(
-        Repository $algorithmRepository,
-        EntityStorageFactory $entityStorageFactory,
-        CustomerSession $customerSession
-    ) {
-        $this->algorithmRepository = $algorithmRepository;
-        $this->entityStorageFactory = $entityStorageFactory;
-        $this->customerSession = $customerSession;
-    }
+        private Repository $algorithmRepository,
+        private EntityStorageFactory $entityStorageFactory,
+        private CustomerSession $customerSession
+    ) { }
 
     /**
      * @param RequestBucketInterface $bucket

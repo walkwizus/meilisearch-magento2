@@ -18,27 +18,14 @@ class Meilisearch
     protected ?Client $client;
 
     /**
-     * @var ConnectionManager
-     */
-    protected ConnectionManager $connectionManager;
-
-    /**
-     * @var SearchIndexNameResolver
-     */
-    protected SearchIndexNameResolver $searchIndexNameResolver;
-
-    /**
      * @param ConnectionManager $connectionManager
      * @param SearchIndexNameResolver $searchIndexNameResolver
      * @throws LocalizedException
      */
     public function __construct(
-        ConnectionManager $connectionManager,
-        SearchIndexNameResolver $searchIndexNameResolver
+        private ConnectionManager $connectionManager,
+        private SearchIndexNameResolver $searchIndexNameResolver
     ) {
-        $this->connectionManager = $connectionManager;
-        $this->searchIndexNameResolver = $searchIndexNameResolver;
-
         try {
             $this->client = $this->connectionManager->getConnection();
         } catch (\Exception $e) {
@@ -47,16 +34,14 @@ class Meilisearch
     }
 
     /**
-     * @param $storeId
      * @param $index
      * @param string $query
-     * @param array $filter
+     * @param array $params
      * @return SearchResult
      */
-    public function search($storeId, $index, string $query = '', array $filter = []): SearchResult
+    public function search($index, string $query = '', array $params = []): SearchResult
     {
-        $indexName = $this->getIndexName($storeId, $index);
-        return $this->client->index($indexName)->search($query, ['filter' => $filter]);
+        return $this->client->index($index)->search($query, $params);
     }
 
     /**

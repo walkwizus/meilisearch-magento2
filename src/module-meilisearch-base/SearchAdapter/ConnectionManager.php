@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Walkwizus\MeilisearchBase\SearchAdapter;
 
-use Meilisearch\Client;
 use Psr\Log\LoggerInterface;
 use Walkwizus\MeilisearchBase\Helper\ServerSettings;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Psr7\HttpFactory;
+use Meilisearch\Client;
 
 class ConnectionManager
 {
@@ -18,34 +18,15 @@ class ConnectionManager
     protected ?Client $client = null;
 
     /**
-     * @var LoggerInterface
-     */
-    protected LoggerInterface $logger;
-
-    /**
-     * @var ServerSettings
-     */
-    protected ServerSettings $serverSettings;
-
-    /**
-     * @var HttpClient
-     */
-    protected HttpClient $httpClient;
-
-    /**
      * @param LoggerInterface $logger
      * @param ServerSettings $serverSettings
      * @param HttpClient $httpClient
      */
     public function __construct(
-        LoggerInterface $logger,
-        ServerSettings $serverSettings,
-        HttpClient $httpClient
-    ) {
-        $this->logger = $logger;
-        $this->serverSettings = $serverSettings;
-        $this->httpClient = $httpClient;
-    }
+        private LoggerInterface $logger,
+        private ServerSettings $serverSettings,
+        private HttpClient $httpClient
+    ) { }
 
     /**
      * @return Client|null

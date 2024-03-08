@@ -10,26 +10,13 @@ use Walkwizus\MeilisearchBase\Helper\IndexSettings;
 class Settings implements SettingsInterface
 {
     /**
-     * @var IndexSettings
-     */
-    protected IndexSettings $indexSettings;
-
-    /**
-     * @var AttributeProvider
-     */
-    protected AttributeProvider $attributeProvider;
-
-    /**
      * @param IndexSettings $indexSettings
      * @param AttributeProvider $attributeProvider
      */
     public function __construct(
-        IndexSettings $indexSettings,
-        AttributeProvider $attributeProvider
-    ) {
-        $this->indexSettings = $indexSettings;
-        $this->attributeProvider = $attributeProvider;
-    }
+        private IndexSettings $indexSettings,
+        private AttributeProvider $attributeProvider
+    ) { }
 
     /**
      * @param string $indexName

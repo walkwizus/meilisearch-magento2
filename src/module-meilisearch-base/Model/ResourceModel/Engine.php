@@ -11,26 +11,11 @@ use Magento\Catalog\Model\Product\Visibility;
 class Engine implements EngineInterface
 {
     /**
-     * @var Visibility
-     */
-    protected Visibility $catalogProductVisibility;
-
-    /**
-     * @var IndexScopeResolver
-     */
-    protected IndexScopeResolver $indexScopeResolver;
-
-    /**
      * @param Visibility $catalogProductVisibility
-     * @param IndexScopeResolver $indexScopeResolver
      */
     public function __construct(
-        Visibility $catalogProductVisibility,
-        IndexScopeResolver $indexScopeResolver
-    ) {
-        $this->catalogProductVisibility = $catalogProductVisibility;
-        $this->indexScopeResolver = $indexScopeResolver;
-    }
+        private Visibility $catalogProductVisibility
+    ) { }
 
     /**
      * @return array

@@ -9,18 +9,14 @@ use Walkwizus\MeilisearchBase\Helper\IndexSettings;
 
 class SearchIndexNameResolver
 {
-    /**
-     * @var IndexSettings
-     */
-    protected IndexSettings $indexSettings;
+    const DEFAULT_INDEX = 'catalog_product';
 
     /**
      * @param IndexSettings $indexSettings
      */
-    public function __construct(IndexSettings $indexSettings)
-    {
-        $this->indexSettings = $indexSettings;
-    }
+    public function __construct(
+        private IndexSettings $indexSettings
+    ) { }
 
     /**
      * @param $storeId
@@ -45,6 +41,6 @@ class SearchIndexNameResolver
      */
     public function getIndexMapping($indexerId): string
     {
-        return ($indexerId == Fulltext::INDEXER_ID) ? 'catalog_product' : $indexerId;
+        return ($indexerId == Fulltext::INDEXER_ID) ? self::DEFAULT_INDEX : $indexerId;
     }
 }

@@ -14,51 +14,6 @@ use Magento\Framework\Indexer\SaveHandler\Batch;
 class BaseIndexerHandler implements IndexerInterface
 {
     /**
-     * @var MeilisearchAdapter
-     */
-    protected MeilisearchAdapter $meilisearchAdapter;
-
-    /**
-     * @var SearchIndexNameResolver
-     */
-    protected SearchIndexNameResolver $searchIndexNameResolver;
-
-    /**
-     * @var Batch
-     */
-    protected Batch $batch;
-
-    /**
-     * @var AttributeMapper
-     */
-    protected AttributeMapper $attributeMapper;
-
-    /**
-     * @var string
-     */
-    protected string $indexName;
-
-    /**
-     * @var string
-     */
-    protected string $typeName;
-
-    /**
-     * @var SettingsInterface
-     */
-    protected SettingsInterface $settings;
-
-    /**
-     * @var int
-     */
-    protected int $batchSize;
-
-    /**
-     * @var string
-     */
-    protected string $indexPrimaryKey;
-
-    /**
      * @param MeilisearchAdapter $meilisearchAdapter
      * @param SearchIndexNameResolver $searchIndexNameResolver
      * @param Batch $batch
@@ -70,26 +25,16 @@ class BaseIndexerHandler implements IndexerInterface
      * @param string $indexPrimaryKey
      */
     public function __construct(
-        MeilisearchAdapter $meilisearchAdapter,
-        SearchIndexNameResolver $searchIndexNameResolver,
-        Batch $batch,
-        AttributeMapper $attributeMapper,
-        string $indexName,
-        string $typeName,
-        SettingsInterface $settings,
-        int $batchSize = 10000,
-        string $indexPrimaryKey = 'id'
-    ) {
-        $this->meilisearchAdapter = $meilisearchAdapter;
-        $this->searchIndexNameResolver = $searchIndexNameResolver;
-        $this->batch = $batch;
-        $this->attributeMapper = $attributeMapper;
-        $this->indexName = $indexName;
-        $this->typeName = $typeName;
-        $this->settings = $settings;
-        $this->batchSize = $batchSize;
-        $this->indexPrimaryKey = $indexPrimaryKey;
-    }
+        private MeilisearchAdapter $meilisearchAdapter,
+        private SearchIndexNameResolver $searchIndexNameResolver,
+        private Batch $batch,
+        private AttributeMapper $attributeMapper,
+        private string $indexName,
+        private string $typeName,
+        private SettingsInterface $settings,
+        private int $batchSize = 10000,
+        private string $indexPrimaryKey = 'id'
+    ) { }
 
     /**
      * @param $dimensions

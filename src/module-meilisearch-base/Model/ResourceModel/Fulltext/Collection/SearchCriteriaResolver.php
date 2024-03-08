@@ -3,69 +3,26 @@
 namespace Walkwizus\MeilisearchBase\Model\ResourceModel\Fulltext\Collection;
 
 use Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection\SearchCriteriaResolverInterface;
-use Magento\Framework\Data\Collection;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Api\Search\SearchCriteria;
 
-/**
- * Resolve specific attributes for search criteria.
- */
 class SearchCriteriaResolver implements SearchCriteriaResolverInterface
 {
     /**
-     * @var SearchCriteriaBuilder
-     */
-    private $builder;
-
-    /**
-     * @var Collection
-     */
-    private $collection;
-
-    /**
-     * @var string
-     */
-    private $searchRequestName;
-
-    /**
-     * @var int
-     */
-    private $size;
-
-    /**
-     * @var array
-     */
-    private $orders;
-
-    /**
-     * @var int
-     */
-    private $currentPage;
-
-    /**
      * SearchCriteriaResolver constructor.
      * @param SearchCriteriaBuilder $builder
-     * @param Collection $collection
      * @param string $searchRequestName
      * @param int $currentPage
      * @param int $size
-     * @param array $orders
+     * @param array|null $orders
      */
     public function __construct(
-        SearchCriteriaBuilder $builder,
-        Collection $collection,
-        string $searchRequestName,
-        int $currentPage,
-        int $size,
-        ?array $orders
-    ) {
-        $this->builder = $builder;
-        $this->collection = $collection;
-        $this->searchRequestName = $searchRequestName;
-        $this->currentPage = $currentPage;
-        $this->size = $size;
-        $this->orders = $orders;
-    }
+        private SearchCriteriaBuilder $builder,
+        private string $searchRequestName,
+        private int $currentPage,
+        private int $size,
+        private ?array $orders
+    ) { }
 
     /**
      * @inheritdoc

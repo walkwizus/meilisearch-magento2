@@ -13,19 +13,13 @@ class IndexSettings extends AbstractHelper
     const MEILISEARCH_INDICES_CONFIG_PATH = 'meilisearch_indices/%s/%s';
 
     /**
-     * @var SerializerInterface
-     */
-    protected SerializerInterface $serializer;
-
-    /**
      * @param Context $context
      * @param SerializerInterface $serializer
      */
     public function __construct(
         Context $context,
-        SerializerInterface $serializer
+        private SerializerInterface $serializer
     ) {
-        $this->serializer = $serializer;
         parent::__construct($context);
     }
 

@@ -12,21 +12,6 @@ use Walkwizus\MeilisearchBase\SearchAdapter\QueryContainer;
 class Builder
 {
     /**
-     * @var DataProviderInterface[]
-     */
-    protected array $dataProviderContainer;
-
-    /**
-     * @var BucketBuilderInterface[]
-     */
-    protected array $aggregationContainer;
-
-    /**
-     * @var DataProviderFactory
-     */
-    protected DataProviderFactory $dataProviderFactory;
-
-    /**
      * @var QueryContainer|null
      */
     protected ?QueryContainer $query = null;
@@ -37,9 +22,9 @@ class Builder
      * @param DataProviderFactory $dataProviderFactory
      */
     public function __construct(
-        array $dataProviderContainer,
-        array $aggregationContainer,
-        DataProviderFactory $dataProviderFactory
+        private array $dataProviderContainer,
+        private array $aggregationContainer,
+        private DataProviderFactory $dataProviderFactory
     ) {
         $this->dataProviderContainer = array_map(
             static function (DataProviderInterface $dataProvider) {
@@ -53,7 +38,6 @@ class Builder
             },
             $aggregationContainer
         );
-        $this->dataProviderFactory = $dataProviderFactory;
     }
 
     /**

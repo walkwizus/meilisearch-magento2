@@ -9,17 +9,11 @@ use Walkwizus\MeilisearchBase\Api\Index\AttributeMapperInterface;
 class AttributeMapper
 {
     /**
-     * @var AttributeMapperInterface[]
-     */
-    protected array $mappers;
-
-    /**
      * @param array $mappers
      */
-    public function __construct(array $mappers = [])
-    {
-        $this->mappers = $mappers;
-    }
+    public function __construct(
+        private array $mappers = []
+    ) { }
 
     /**
      * @param string $indexerId

@@ -14,34 +14,15 @@ use Magento\Framework\Search\Request\BucketInterface;
 class DataProvider implements DataProviderInterface, QueryAwareInterface
 {
     /**
-     * @var Range
-     */
-    protected Range $range;
-
-    /**
-     * @var IntervalFactory
-     */
-    protected IntervalFactory $intervalFactory;
-
-    /**
-     * @var ScopeResolverInterface
-     */
-    protected ScopeResolverInterface $scopeResolver;
-
-    /**
      * @param Range $range
      * @param IntervalFactory $intervalFactory
      * @param ScopeResolverInterface $scopeResolver
      */
     public function __construct(
-        Range $range,
-        IntervalFactory $intervalFactory,
-        ScopeResolverInterface $scopeResolver
-    ) {
-        $this->range = $range;
-        $this->intervalFactory = $intervalFactory;
-        $this->scopeResolver = $scopeResolver;
-    }
+        private Range $range,
+        private IntervalFactory $intervalFactory,
+        private ScopeResolverInterface $scopeResolver
+    ) { }
 
     /**
      * @return array

@@ -10,36 +10,21 @@ use Magento\Framework\Search\Response\QueryResponse;
 class ResponseFactory
 {
     /**
-     * @var ObjectManagerInterface
-     */
-    protected ObjectManagerInterface $objectManager;
-
-    /**
-     * @var DocumentFactory
-     */
-    protected DocumentFactory $documentFactory;
-
-    /**
-     * @var AggregationFactory
-     */
-    protected AggregationFactory $aggregationFactory;
-
-    /**
      * @param ObjectManagerInterface $objectManager
      * @param DocumentFactory $documentFactory
      * @param AggregationFactory $aggregationFactory
      */
     public function __construct(
-        ObjectManagerInterface $objectManager,
-        DocumentFactory $documentFactory,
-        AggregationFactory $aggregationFactory
-    ) {
-        $this->objectManager = $objectManager;
-        $this->documentFactory = $documentFactory;
-        $this->aggregationFactory = $aggregationFactory;
-    }
+        private ObjectManagerInterface $objectManager,
+        private DocumentFactory $documentFactory,
+        private AggregationFactory $aggregationFactory
+    ) { }
 
-    public function create($response)
+    /**
+     * @param array $response
+     * @return QueryResponse
+     */
+    public function create(array $response): QueryResponse
     {
         $documents = [];
         foreach ($response['documents']['hits'] as $rawDocument) {
