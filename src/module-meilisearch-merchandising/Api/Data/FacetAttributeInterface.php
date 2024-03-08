@@ -14,8 +14,6 @@ interface FacetAttributeInterface
     const SHOW_MORE = 'show_more';
     const SHOW_MORE_LIMIT = 'show_more_limit';
     const SEARCHABLE = 'searchable';
-    const SEARCHABLE_IS_ALWAYS_ACTIVE = 'searchable_is_always_active';
-    const SEARCHABLE_ESCAPE_FACET_VALUES = 'searchable_escape_facet_values';
     const FACET_ID = 'facet_id';
 
     /**
@@ -105,28 +103,6 @@ interface FacetAttributeInterface
      * @return $this
      */
     public function setSearchable($searchable);
-
-    /**
-     * @return bool
-     */
-    public function getSearchableIsAlwaysActive();
-
-    /**
-     * @param bool $searchableIsAlwaysActive
-     * @return $this
-     */
-    public function setSearchableIsAlwaysActive($searchableIsAlwaysActive);
-
-    /**
-     * @return bool
-     */
-    public function getSearchableEscapeFacetValues();
-
-    /**
-     * @param bool $searchableEscapeFacetValues
-     * @return $this
-     */
-    public function setSearchableEscapeFacetValues($searchableEscapeFacetValues);
 
     /**
      * @return int

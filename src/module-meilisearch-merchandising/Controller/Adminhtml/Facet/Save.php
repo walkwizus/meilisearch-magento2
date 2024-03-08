@@ -50,8 +50,6 @@ class Save extends Action implements HttpPostActionInterface
                 $facetAttributeModel->setShowMore((bool)$facetAttribute['show_more']);
                 $facetAttributeModel->setShowMoreLimit((int)$facetAttribute['show_more_limit']);
                 $facetAttributeModel->setSearchable((bool)$facetAttribute['searchable']);
-                $facetAttributeModel->setSearchableIsAlwaysActive((bool)$facetAttribute['searchable_is_always_active']);
-                $facetAttributeModel->setSearchableEscapeFacetValues((bool)$facetAttribute['searchable_escape_facet_values']);
                 $facetAttributeModel->setFacetId((bool)$facetAttribute['facet_id']);
 
                 try {

@@ -148,38 +148,6 @@ class FacetAttribute extends AbstractModel implements FacetAttributeInterface
     /**
      * @ingeritdoc
      */
-    public function getSearchableIsAlwaysActive()
-    {
-        return $this->getData(self::SEARCHABLE_IS_ALWAYS_ACTIVE);
-    }
-
-    /**
-     * @ingeritdoc
-     */
-    public function setSearchableIsAlwaysActive($searchableIsAlwaysActive)
-    {
-        return $this->setData(self::SEARCHABLE_IS_ALWAYS_ACTIVE, $searchableIsAlwaysActive);
-    }
-
-    /**
-     * @ingeritdoc
-     */
-    public function getSearchableEscapeFacetValues()
-    {
-        return $this->getData(self::SEARCHABLE_ESCAPE_FACET_VALUES);
-    }
-
-    /**
-     * @ingeritdoc
-     */
-    public function setSearchableEscapeFacetValues($searchableEscapeFacetValues)
-    {
-        return $this->setData(self::SEARCHABLE_ESCAPE_FACET_VALUES, $searchableEscapeFacetValues);
-    }
-
-    /**
-     * @ingeritdoc
-     */
     public function getFacetId()
     {
         return $this->getData(self::FACET_ID);
