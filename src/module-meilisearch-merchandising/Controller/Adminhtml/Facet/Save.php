@@ -44,13 +44,14 @@ class Save extends Action implements HttpPostActionInterface
                     return $redirect->setPath('*/*/');
                 }
 
+                $facetAttributeModel->setCode($facetAttribute['code']);
                 $facetAttributeModel->setPosition((int)$facetAttribute['position']);
                 $facetAttributeModel->setOperator($facetAttribute['operator']);
                 $facetAttributeModel->setLimit((int)$facetAttribute['limit']);
                 $facetAttributeModel->setShowMore((bool)$facetAttribute['show_more']);
                 $facetAttributeModel->setShowMoreLimit((int)$facetAttribute['show_more_limit']);
                 $facetAttributeModel->setSearchable((bool)$facetAttribute['searchable']);
-                $facetAttributeModel->setFacetId((bool)$facetAttribute['facet_id']);
+                $facetAttributeModel->setFacetId((int)$facetAttribute['facet_id']);
 
                 try {
                     $this->facetAttributeRepository->save($facetAttributeModel);
