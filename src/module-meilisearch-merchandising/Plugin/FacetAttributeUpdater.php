@@ -7,13 +7,13 @@ namespace Walkwizus\MeilisearchMerchandising\Plugin;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Walkwizus\MeilisearchBase\Model\Adapter\Meilisearch;
 use Walkwizus\MeilisearchCatalog\Service\GetRefinementListService;
 use Walkwizus\MeilisearchMerchandising\Model\FacetFactory;
 use Walkwizus\MeilisearchMerchandising\Model\FacetAttributeFactory;
 use Walkwizus\MeilisearchMerchandising\Api\FacetRepositoryInterface;
 use Walkwizus\MeilisearchMerchandising\Api\FacetAttributeRepositoryInterface;
 use Walkwizus\MeilisearchMerchandising\Model\Config\Source\FacetAttribute\Operator;
+use Walkwizus\MeilisearchBase\Model\Indexer\BaseIndexerHandler;
 
 class FacetAttributeUpdater
 {
@@ -33,21 +33,27 @@ class FacetAttributeUpdater
     ) { }
 
     /**
-     * @param Meilisearch $subject
-     * @param array $settings
-     * @param $storeId
-     * @param $mappedIndexerId
-     * @return void
+     * @param BaseIndexerHandler $subject
+     * @param $dimensions
+     * @param \Traversable $documents
+     * @return null
+     * @throws CouldNotSaveException
      * @throws LocalizedException
      */
-    public function beforeUpdateSettings(Meilisearch $subject, array $settings, $storeId, $mappedIndexerId): void
+    public function beforeSaveIndex(BaseIndexerHandler $subject, $dimensions, \Traversable $documents)
     {
-        $refinementList = $this->getRefinementListService->get($mappedIndexerId);
+        $indexName = $subject->getIndexerId();
+
+        if ($indexName != 'catalog_product') {
+            return null;
+        }
+
+        $refinementList = $this->getRefinementListService->get($indexName);
 
         if (count($refinementList) > 0) {
             try {
-                $facet = $this->facetRepository->getByIndex($mappedIndexerId);
-                $facet->setIndexName($mappedIndexerId);
+                $facet = $this->facetRepository->getByIndex($indexName);
+                $facet->setIndexName($indexName);
                 $this->facetRepository->save($facet);
 
                 $position = 0;
@@ -75,7 +81,7 @@ class FacetAttributeUpdater
                 }
             } catch (NoSuchEntityException $noSuchEntityException) {
                 $facet = $this->facetFactory->create();
-                $facet->setIndexName($mappedIndexerId);
+                $facet->setIndexName($indexName);
                 $this->facetRepository->save($facet);
 
                 $position = 0;
@@ -105,5 +111,7 @@ class FacetAttributeUpdater
 
             }
         }
+
+        return null;
     }
 }

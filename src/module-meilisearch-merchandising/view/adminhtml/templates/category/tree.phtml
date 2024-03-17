@@ -1,35 +1,14 @@
 <?php /** @var \Walkwizus\MeilisearchMerchandising\Block\Adminhtml\Category\Tree $block */ ?>
+<?php if ($block->getStoreId()) : ?>
 <div id="merch-category-tree"></div>
-<script>
-    requirejs([
-        'jquery',
-        'jsTree'
-    ], function($) {
-        $('#merch-category-tree').jstree({
-            'plugins': ['wholerow'],
-            'core': {
-                'multiple': false,
-                'data': <?= $block->getCategoryTree() ?>
+<script type="text/x-magento-init">
+    {
+        "#merch-category-tree": {
+            "Walkwizus_MeilisearchMerchandising/js/category/tree": {
+                "categoryTree": <?= $block->getCategoryTree() ?>,
+                "loadRuleUrl": "<?= $block->getLoadRuleUrl() ?>"
             }
-        }).on('select_node.jstree', function(node, selected) {
-            let categoryId = selected.node.id;
-            $.ajax('<?= $block->getAjaxUrl() ?>', {
-                type: 'POST',
-                data: {
-                    form_key: window.FORM_KEY,
-                    category_id: categoryId
-                },
-                dataType: 'json',
-                showLoader: true,
-                success: function(r) {
-                    $('#category_id').val(categoryId);
-                    if (r.length > 0) {
-                        $('#query-builder').queryBuilder('setRules', $.parseJSON(r));
-                    } else {
-                        $('#query-builder').queryBuilder('setRules', [{empty: true}]);
-                    }
-                }
-            });
-        });
-    });
+        }
+    }
 </script>
+<?php endif; ?>

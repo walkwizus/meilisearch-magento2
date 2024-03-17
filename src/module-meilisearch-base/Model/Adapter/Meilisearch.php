@@ -6,7 +6,6 @@ namespace Walkwizus\MeilisearchBase\Model\Adapter;
 
 use Meilisearch\Client;
 use Walkwizus\MeilisearchBase\SearchAdapter\ConnectionManager;
-use Walkwizus\MeilisearchBase\SearchAdapter\SearchIndexNameResolver;
 use Meilisearch\Search\SearchResult;
 use Magento\Framework\Exception\LocalizedException;
 
@@ -19,12 +18,10 @@ class Meilisearch
 
     /**
      * @param ConnectionManager $connectionManager
-     * @param SearchIndexNameResolver $searchIndexNameResolver
      * @throws LocalizedException
      */
     public function __construct(
-        private ConnectionManager $connectionManager,
-        private SearchIndexNameResolver $searchIndexNameResolver
+        private ConnectionManager $connectionManager
     ) {
         try {
             $this->client = $this->connectionManager->getConnection();
@@ -45,17 +42,15 @@ class Meilisearch
     }
 
     /**
+     * @param string $indexName
      * @param array $documents
-     * @param $storeId
-     * @param $mappedIndexerId
      * @param string $primaryKey
      * @return $this
      */
-    public function addDocs(array $documents, $storeId, $mappedIndexerId, string $primaryKey): static
+    public function addDocs(string $indexName, array $documents, string $primaryKey): static
     {
         if (count($documents)) {
             try {
-                $indexName = $this->getIndexName($storeId, $mappedIndexerId);
                 $this->client->updateIndex($indexName, ['primaryKey' => $primaryKey]);
                 $index = $this->client->index($indexName);
                 $index->addDocumentsInBatches($documents, count($documents), $primaryKey);
@@ -68,15 +63,13 @@ class Meilisearch
     }
 
     /**
+     * @param $indexName
      * @param array $settings
-     * @param $storeId
-     * @param $mappedIndexerId
      * @return $this
      */
-    public function updateSettings(array $settings, $storeId, $mappedIndexerId): static
+    public function updateSettings($indexName, array $settings): static
     {
         if (count($settings) > 0) {
-            $indexName = $this->getIndexName($storeId, $mappedIndexerId);
             $this->client->index($indexName)->updateSettings($settings);
         }
 
@@ -84,36 +77,21 @@ class Meilisearch
     }
 
     /**
-     * @param $storeId
-     * @param $mappedIndexerId
+     * @param string $indexName
      * @return void
      */
-    public function deleteIndex($storeId, $mappedIndexerId)
+    public function deleteIndex(string $indexName)
     {
-        $indexName = $this->getIndexName($storeId, $mappedIndexerId);
         $this->client->deleteIndex($indexName);
     }
 
     /**
-     * @param $storeId
-     * @param $mappedIndexerId
+     * @param string $indexName
      * @return $this
      */
-    public function cleanIndex($storeId, $mappedIndexerId): static
+    public function cleanIndex(string $indexName): static
     {
-        $indexName = $this->getIndexName($storeId, $mappedIndexerId);
         $this->client->index($indexName)->deleteAllDocuments();
-
         return $this;
-    }
-
-    /**
-     * @param $storeId
-     * @param $mappedIndexerId
-     * @return string
-     */
-    private function getIndexName($storeId, $mappedIndexerId): string
-    {
-        return $this->searchIndexNameResolver->getIndexName($storeId, $mappedIndexerId);
     }
 }

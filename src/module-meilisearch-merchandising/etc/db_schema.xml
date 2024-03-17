@@ -5,6 +5,7 @@
         <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Id"/>
         <column xsi:type="text" name="category_id" nullable="false" comment="Category Id"/>
         <column xsi:type="text" name="query" nullable="false" comment="Query"/>
+        <column xsi:type="int" name="store_id" padding="10" unsigned="true" nullable="false" comment="Store Id"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>

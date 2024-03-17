@@ -1,4 +1,13 @@
 <?php /** @var \Walkwizus\MeilisearchMerchandising\Block\Adminhtml\Category\Query\Builder $block */?>
+<?php if (!$block->getStoreId()) : ?>
+<div class="notices-wrapper">
+    <div class="messages">
+        <div class="message">
+            <strong><?= __('To configure category merchandising, please select a store') ?></strong>
+        </div>
+    </div>
+</div>
+<?php else : ?>
 <form id="category-merchandising-form" action="<?= $block->getSaveRuleUrl() ?>" method="post">
     <button type="submit" id="save-rule" title="<?= __('Save Rule') ?>" class="save primary">
         <span><?= __('Save Rule') ?></span>
@@ -18,101 +27,17 @@
         content
     </div>
 </div>
-<script>
-    requirejs([
-        'jquery',
-        'queryBuilder',
-        'Magento_Ui/js/modal/modal',
-        'prototype'
-    ], function($, queryBuilder, modal) {
-        let qb = $('#query-builder').queryBuilder({
-            filters: <?= $this->getFilters() ?>
-        });
-
-        $('#category-merchandising-form').submit(function(e) {
-            e.preventDefault();
-            let rules = qb.queryBuilder('getRules');
-            let categoryId = $('#category_id').val();
-
-            if (rules && rules.valid && categoryId > 0) {
-                $.ajax(this.action, {
-                    showLoader: true,
-                    dataType: 'json',
-                    data: {
-                        form_key: window.FORM_KEY,
-                        rules: rules,
-                        category_id: categoryId
-                    }
-                });
+<script type="text/x-magento-init">
+    {
+        "#category-merchandising-form": {
+            "Walkwizus_MeilisearchMerchandising/js/category/query/builder": {
+                "queryBuilderContainer": "#query-builder",
+                "filters": <?= $block->getFilters() ?>,
+                "previewUrl": "<?= $block->getPreviewUrl() ?>",
+                "productChooserUrl": "<?= $block->getProductChooserUrl() ?>",
+                "storeId": "<?= $block->getStoreId() ?>"
             }
-        });
-
-        $('#apply-rule').on('click', function() {
-            let rules = qb.queryBuilder('getRules');
-
-            if (rules && rules.valid) {
-                $.ajax('<?= $block->getPreviewUrl() ?>', {
-                    showLoader: true,
-                    dataType: 'json',
-                    data: {
-                        form_key: window.FORM_KEY,
-                        rules: rules
-                    },
-                    success: function(response) {
-                        let previewContainer = $('#category-merchandising-product');
-                        previewContainer.html('<ul>');
-
-                        $.each(response.hits, function(i, v) {
-                            previewContainer.append('<li>' + v.name + ' (' + v.sku + ')</li>');
-                        });
-
-                        previewContainer.append('</ul>');
-                    }
-                });
-            }
-        });
-
-        qb.on('afterSetRules.queryBuilder', function() {
-            $('#apply-rule').click();
-        });
-
-        let options = {
-            type: 'slide',
-            responsive: true,
-            title: 'Main title',
-            buttons: [{
-                text: $.mage.__('Ok'),
-                class: '',
-                click: function () {
-                    this.closeModal();
-                }
-            }],
-            opened: function() {
-                new Ajax.Request('meilisearch_merchandising/category/merch_chooser/', {
-                    evalScripts: true,
-                    parameters: {
-                        'form_key': FORM_KEY
-                    },
-                    onSuccess: function(t) {
-                        $('.modal-body-content').html(t.responseText);
-                    }.bind(this)
-                });
-            }
-        };
-
-        qb.on('afterUpdateRuleFilter.queryBuilder', function(e, rule) {
-            if (rule.filter.id === 'sku') {
-                let input = $(rule.$el).find('.rule-value-container input');
-                let button = $('<button>').text('Mon Bouton').addClass('btn btn-primary');
-
-                input.after(button);
-
-                button.on('click', function() {
-                    $('#modal').modal('openModal');
-                });
-            }
-        });
-
-        modal(options, $('#modal'));
-    });
+        }
+    }
 </script>
+<?php endif; ?>

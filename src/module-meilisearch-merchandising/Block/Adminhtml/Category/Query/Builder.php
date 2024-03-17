@@ -49,12 +49,28 @@ class Builder extends Template
     }
 
     /**
+     * @return string
+     */
+    public function getProductChooserUrl(): string
+    {
+        return $this->getUrl('meilisearch_merchandising/category/merch_chooser');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStoreId(): mixed
+    {
+        return $this->getRequest()->getParam('store', false);
+    }
+
+    /**
      * @return false|string
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getFilters(): bool|string
     {
-        $attributes = $this->getAttributes();
+        $attributes = $this->getFilterableAttributes();
         $rules = $this->transformAttributesToRules($attributes);
 
         return json_encode($rules);
@@ -72,8 +88,8 @@ class Builder extends Template
         foreach ($attributes as $attribute) {
             $rule = [
                 'id' => $attribute['code'],
+                'label' => $attribute['label'],
                 'operator' => 'equal',
-                'value' => '',
             ];
 
             switch ($attribute['type']) {
@@ -122,18 +138,20 @@ class Builder extends Template
     /**
      * @return array
      */
-    protected function getAttributes(): array
+    private function getFilterableAttributes(): array
     {
         $attributes = $this->attributeCollectionFactory
             ->create()
-            ->addFieldToFilter('frontend_input', ['in' => ['text', 'select', 'multiselect', 'boolean']]);
+            ->addFieldToFilter('frontend_input', ['in' => ['select', 'multiselect', 'boolean']])
+            ->addFieldToFilter('is_filterable', 1);
 
         $data = [];
         /** @var Attribute $attribute */
         foreach ($attributes as $attribute) {
             $data[] = [
                 'code' => $attribute->getAttributeCode(),
-                'type' => $attribute->getFrontendInput()
+                'type' => $attribute->getFrontendInput(),
+                'label' => $attribute->getDefaultFrontendLabel()
             ];
         }
 

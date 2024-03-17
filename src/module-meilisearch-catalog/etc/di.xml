@@ -4,7 +4,6 @@
     <virtualType name="catalogProductSearchIndexHandler" type="Walkwizus\MeilisearchBase\Model\Indexer\BaseIndexerHandler">
         <arguments>
             <argument name="indexName" xsi:type="string">catalog_product</argument>
-            <argument name="typeName" xsi:type="string">product</argument>
             <argument name="indexPrimaryKey" xsi:type="string">id</argument>
         </arguments>
     </virtualType>
@@ -18,7 +17,6 @@
     <virtualType name="catalogCategorySearchIndexHandler" type="Walkwizus\MeilisearchBase\Model\Indexer\BaseIndexerHandler">
         <arguments>
             <argument name="indexName" xsi:type="string">catalog_category</argument>
-            <argument name="typeName" xsi:type="string">category</argument>
             <argument name="indexPrimaryKey" xsi:type="string">entity_id</argument>
         </arguments>
     </virtualType>

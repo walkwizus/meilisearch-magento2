@@ -7,7 +7,7 @@
     <preference for="Walkwizus\MeilisearchMerchandising\Api\Data\CategoryInterface" type="Walkwizus\MeilisearchMerchandising\Model\Category"/>
     <preference for="Walkwizus\MeilisearchMerchandising\Api\Data\FacetInterface" type="Walkwizus\MeilisearchMerchandising\Model\Facet"/>
     <preference for="Walkwizus\MeilisearchMerchandising\Api\Data\FacetAttributeInterface" type="Walkwizus\MeilisearchMerchandising\Model\FacetAttribute"/>
-    <type name="Walkwizus\MeilisearchBase\Model\Adapter\Meilisearch">
+    <type name="Walkwizus\MeilisearchBase\Model\Indexer\BaseIndexerHandler">
         <plugin name="meilisearch_merchandising_facet_attributes" type="Walkwizus\MeilisearchMerchandising\Plugin\FacetAttributeUpdater"/>
     </type>
     <virtualType name="Walkwizus\MeilisearchMerchandising\Model\ResourceModel\Facet\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">

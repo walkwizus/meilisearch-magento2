@@ -19,7 +19,6 @@ class BaseIndexerHandler implements IndexerInterface
      * @param Batch $batch
      * @param AttributeMapper $attributeMapper
      * @param string $indexName
-     * @param string $typeName
      * @param SettingsInterface $settings
      * @param int $batchSize
      * @param string $indexPrimaryKey
@@ -30,7 +29,6 @@ class BaseIndexerHandler implements IndexerInterface
         private Batch $batch,
         private AttributeMapper $attributeMapper,
         private string $indexName,
-        private string $typeName,
         private SettingsInterface $settings,
         private int $batchSize = 10000,
         private string $indexPrimaryKey = 'id'
@@ -39,19 +37,20 @@ class BaseIndexerHandler implements IndexerInterface
     /**
      * @param $dimensions
      * @param \Traversable $documents
-     * @return $this|IndexerInterface
+     * @return IndexerInterface
      */
-    public function saveIndex($dimensions, \Traversable $documents): IndexerInterface|static
+    public function saveIndex($dimensions, \Traversable $documents): IndexerInterface
     {
         foreach ($dimensions as $dimension) {
             $storeId = $dimension->getValue();
             $indexerId = $this->getIndexerId();
+            $indexName = $this->searchIndexNameResolver->getIndexName($storeId, $this->indexName);
 
-            $this->meilisearchAdapter->updateSettings($this->settings->getSettings($indexerId), $storeId, $indexerId);
+            $this->meilisearchAdapter->updateSettings($indexName, $this->settings->getSettings($indexerId));
 
             foreach ($this->batch->getItems($documents, $this->batchSize) as $batchDocuments) {
                 $batchDocuments = $this->attributeMapper->map($indexerId, $batchDocuments, $storeId);
-                $this->meilisearchAdapter->addDocs($batchDocuments, $storeId, $indexerId, $this->indexPrimaryKey);
+                $this->meilisearchAdapter->addDocs($indexName, $batchDocuments, $this->indexPrimaryKey);
             }
         }
 
@@ -67,9 +66,8 @@ class BaseIndexerHandler implements IndexerInterface
     {
         foreach ($dimensions as $dimension) {
             $storeId = $dimension->getValue();
-            $indexerId = $this->getIndexerId();
-
-            $this->meilisearchAdapter->deleteIndex($storeId, $indexerId);
+            $indexName = $this->searchIndexNameResolver->getIndexName($storeId, $this->indexName);
+            $this->meilisearchAdapter->deleteIndex($indexName);
         }
     }
 
@@ -81,9 +79,8 @@ class BaseIndexerHandler implements IndexerInterface
     {
         foreach ($dimensions as $dimension) {
             $storeId = $dimension->getValue();
-            $indexerId = $this->getIndexerId();
-
-            $this->meilisearchAdapter->cleanIndex($storeId, $indexerId);
+            $indexName = $this->searchIndexNameResolver->getIndexName($storeId, $this->indexName);
+            $this->meilisearchAdapter->cleanIndex($indexName);
         }
     }
 
@@ -99,7 +96,7 @@ class BaseIndexerHandler implements IndexerInterface
     /**
      * @return string
      */
-    private function getIndexerId(): string
+    public function getIndexerId(): string
     {
         return $this->searchIndexNameResolver->getIndexMapping($this->indexName);
     }

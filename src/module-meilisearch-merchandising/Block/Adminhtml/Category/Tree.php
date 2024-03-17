@@ -29,6 +29,14 @@ class Tree extends Template
     }
 
     /**
+     * @return mixed
+     */
+    public function getStoreId(): mixed
+    {
+        return $this->getRequest()->getParam('store', false);
+    }
+
+    /**
      * @return false|string
      * @throws \Exception
      */
@@ -68,7 +76,7 @@ class Tree extends Template
     /**
      * @return string
      */
-    public function getAjaxUrl(): string
+    public function getLoadRuleUrl(): string
     {
         return $this->getUrl('meilisearch_merchandising/category/ajax_getrule');
     }
