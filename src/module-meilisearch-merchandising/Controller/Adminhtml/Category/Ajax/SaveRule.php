@@ -36,6 +36,7 @@ class SaveRule extends Action implements HttpPostActionInterface
     public function execute(): ResultInterface
     {
         $categoryId = $this->getRequest()->getParam('category_id', false);
+        $storeId = $this->getRequest()->getParam('storeId');
         $rules = $this->getRequest()->getParam('rules', false);
 
         unset($rules['valid']);
@@ -43,9 +44,11 @@ class SaveRule extends Action implements HttpPostActionInterface
         try {
             $categoryRule = $this->categoryRepository->getByCategoryId($categoryId);
             $categoryRule->setCategoryId($categoryId);
+            $categoryRule->setStoreId($storeId);
             $categoryRule->setQuery(json_encode($rules));
         } catch (NoSuchEntityException $e) {
             $categoryRule = $this->categoryFactory->create();
+            $categoryRule->setStoreId($storeId);
             $categoryRule->setCategoryId($categoryId);
             $categoryRule->setQuery(json_encode($rules));
         }

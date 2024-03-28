@@ -4,6 +4,7 @@
     <head>
         <css src="Walkwizus_MeilisearchMerchandising::css/query-builder-bt.css"/>
         <css src="Walkwizus_MeilisearchMerchandising::css/query-builder.css"/>
+        <css src="Walkwizus_MeilisearchMerchandising::css/preview.css"/>
     </head>
     <body>
         <referenceContainer name="page.main.actions">

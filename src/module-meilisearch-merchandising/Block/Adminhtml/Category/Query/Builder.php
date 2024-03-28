@@ -5,26 +5,24 @@ declare(strict_types=1);
 namespace Walkwizus\MeilisearchMerchandising\Block\Adminhtml\Category\Query;
 
 use Magento\Backend\Block\Template;
-use Magento\Directory\Helper\Data as DirectoryHelper;
+use Magento\Backend\Block\Template\Context;
+use Walkwizus\MeilisearchMerchandising\Service\QueryBuilderService;
 use Magento\Framework\Json\Helper\Data as JsonHelper;
-use Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory as AttributeCollectionFactory;
-use Magento\Eav\Api\AttributeRepositoryInterface;
-use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
+use Magento\Directory\Helper\Data as DirectoryHelper;
+use Magento\Framework\UrlInterface;
 
 class Builder extends Template
 {
     /**
-     * @param Template\Context $context
-     * @param AttributeCollectionFactory $attributeCollectionFactory
-     * @param AttributeRepositoryInterface $attributeRepository
+     * @param Context $context
+     * @param QueryBuilderService $queryBuilderService
      * @param array $data
      * @param JsonHelper|null $jsonHelper
      * @param DirectoryHelper|null $directoryHelper
      */
     public function __construct(
         Template\Context $context,
-        private AttributeCollectionFactory $attributeCollectionFactory,
-        private AttributeRepositoryInterface $attributeRepository,
+        private QueryBuilderService $queryBuilderService,
         array $data = [],
         ?JsonHelper $jsonHelper = null,
         ?DirectoryHelper $directoryHelper = null
@@ -70,91 +68,18 @@ class Builder extends Template
      */
     public function getFilters(): bool|string
     {
-        $attributes = $this->getFilterableAttributes();
-        $rules = $this->transformAttributesToRules($attributes);
-
-        return json_encode($rules);
+        return json_encode($this->queryBuilderService->convertAttributesToRules());
     }
 
     /**
-     * @param $attributes
-     * @return array
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return string
      */
-    protected function transformAttributesToRules($attributes): array
+    public function getProductMediaUrl(): string
     {
-        $rules = [];
-
-        foreach ($attributes as $attribute) {
-            $rule = [
-                'id' => $attribute['code'],
-                'label' => $attribute['label'],
-                'operator' => 'equal',
-            ];
-
-            switch ($attribute['type']) {
-                case 'text':
-                    $rule['type'] = 'string';
-                    break;
-                case 'select':
-                case 'multiselect':
-                    $rule['type'] = 'integer';
-                    $rule['input'] = 'select';
-                    $rule['values'] = $this->getSelectValues($attribute['code']);
-                    break;
-                case 'boolean':
-                    $rule['type'] = 'integer';
-                    $rule['input'] = 'radio';
-                    $rule['values'] = [1 => 'Yes', 0 => 'No'];
-                    break;
-            }
-
-            $rules[] = $rule;
+        try {
+            return $this->_storeManager->getStore($this->getStoreId())->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product';
+        } catch (\Exception $e) {
+            return '';
         }
-
-        return $rules;
-    }
-
-    /**
-     * @param $attributeCode
-     * @return array
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    protected function getSelectValues($attributeCode): array
-    {
-        $values = [];
-        $attribute = $this->attributeRepository->get('catalog_product', $attributeCode);
-        $options = $attribute->getSource()->getAllOptions();
-
-        foreach ($options as $option) {
-            if (isset($option['value'])) {
-                $values[$option['value']] = $option['label'];
-            }
-        }
-
-        return $values;
-    }
-
-    /**
-     * @return array
-     */
-    private function getFilterableAttributes(): array
-    {
-        $attributes = $this->attributeCollectionFactory
-            ->create()
-            ->addFieldToFilter('frontend_input', ['in' => ['select', 'multiselect', 'boolean']])
-            ->addFieldToFilter('is_filterable', 1);
-
-        $data = [];
-        /** @var Attribute $attribute */
-        foreach ($attributes as $attribute) {
-            $data[] = [
-                'code' => $attribute->getAttributeCode(),
-                'type' => $attribute->getFrontendInput(),
-                'label' => $attribute->getDefaultFrontendLabel()
-            ];
-        }
-
-        return $data;
     }
 }

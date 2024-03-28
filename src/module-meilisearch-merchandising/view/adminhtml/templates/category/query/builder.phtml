@@ -21,7 +21,19 @@
     <input type="hidden" id="category_id" name="category_id"/>
     <div id="query-builder"></div>
 </form>
-<div id="category-merchandising-product"></div>
+<script id="category-merchandising-preview-template" type="text/x-magento-template">
+    <div class="product-list-container">
+        <div class="product-image">
+            <img src="<?= $block->getProductMediaUrl() ?>/<%- data.image %>" alt="<%- data.name %>" />
+        </div>
+        <div class="product-information">
+            <div class="product-name"><%- data.name %></div>
+            <div class="product-sku"><%- data.sku %></div>
+            <div class="product-price"><%- data.price_0 %></div>
+        </div>
+    </div>
+</script>
+<div id="category-merchandising-preview"></div>
 <div id="modal">
     <div class="modal-body-content">
         content

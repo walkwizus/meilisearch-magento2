@@ -1,8 +1,9 @@
 define([
     'jquery',
     'queryBuilder',
-    'Magento_Ui/js/modal/modal'
-], function($, queryBuilder, modal) {
+    'Magento_Ui/js/modal/modal',
+    'mage/template'
+], function($, queryBuilder, modal, template) {
     return function(config, element) {
         let qb = $(config.queryBuilderContainer).queryBuilder({
             filters: config.filters
@@ -20,7 +21,8 @@ define([
                     data: {
                         form_key: window.FORM_KEY,
                         rules: rules,
-                        category_id: categoryId
+                        category_id: categoryId,
+                        storeId: config.storeId
                     }
                 });
             }
@@ -39,14 +41,16 @@ define([
                         storeId: config.storeId
                     },
                     success: function(response) {
-                        let previewContainer = $('#category-merchandising-product');
-                        previewContainer.html('<ul>');
+                        let previewTemplate = template('#category-merchandising-preview-template');
+
+                        $('#category-merchandising-preview').empty();
 
                         $.each(response.hits, function(i, v) {
-                            previewContainer.append('<li>' + v.name + ' (' + v.sku + ')</li>');
+                            let preview = previewTemplate({
+                                data: { ...v }
+                            });
+                            $('#category-merchandising-preview').append(preview);
                         });
-
-                        previewContainer.append('</ul>');
                     }
                 });
             }

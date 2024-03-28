@@ -1,0 +1,3 @@
+#category-merchandising-preview { display: flex; flex-wrap: wrap; }
+.product-list-container { display: flex; flex-direction: column; width: 200px; }
+.product-image { max-width: 150px; max-height: 150px; }
