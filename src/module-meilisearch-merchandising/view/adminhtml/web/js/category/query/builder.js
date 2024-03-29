@@ -23,6 +23,9 @@ define([
                         rules: rules,
                         category_id: categoryId,
                         storeId: config.storeId
+                    },
+                    success: function(r) {
+                        $('#apply-rule').click();
                     }
                 });
             }
@@ -54,6 +57,22 @@ define([
                     }
                 });
             }
+        });
+
+        $('#delete-rule').on('click', function() {
+            let categoryId = $('#category_id').val();
+            $.ajax(config.deleteRuleUrl, {
+                showLoader: true,
+                dataType: 'json',
+                data: {
+                    form_key: window.FORM_KEY,
+                    category_id: categoryId
+                },
+                success: function(r) {
+                    $('#query-builder').queryBuilder('setRules', [{empty: true}]);
+                    $('#category-merchandising-preview').html('');
+                }
+            })
         });
 
         qb.on('afterSetRules.queryBuilder', function() {

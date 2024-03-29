@@ -7,11 +7,11 @@ namespace Walkwizus\MeilisearchMerchandising\Controller\Adminhtml\Category\Ajax;
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Walkwizus\MeilisearchMerchandising\Model\CategoryFactory;
 use Walkwizus\MeilisearchMerchandising\Api\CategoryRepositoryInterface;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class SaveRule extends Action implements HttpPostActionInterface
 {

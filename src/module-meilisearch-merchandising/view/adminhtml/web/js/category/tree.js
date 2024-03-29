@@ -26,8 +26,10 @@ define([
                     $('#category_id').val(categoryId);
                     if (r.length > 0) {
                         $('#query-builder').queryBuilder('setRules', $.parseJSON(r));
+                        $('#apply-rule').click();
                     } else {
                         $('#query-builder').queryBuilder('setRules', [{empty: true}]);
+                        $('#category-merchandising-preview').html('');
                     }
                 }
             });

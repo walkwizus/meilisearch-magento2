@@ -38,6 +38,11 @@ class Builder extends Template
         return $this->getUrl('meilisearch_merchandising/category/ajax_saverule');
     }
 
+    public function getDeleteRuleUrl(): string
+    {
+        return $this->getUrl('meilisearch_merchandising/category/ajax_deleterule');
+    }
+
     /**
      * @return string
      */

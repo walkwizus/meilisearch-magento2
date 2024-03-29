@@ -75,7 +75,9 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function deleteByCategoryId($categoryId): void
     {
         try {
-            $this->categoryResource->delete($categoryId);
+            $category = $this->categoryFactory->create();
+            $this->categoryResource->load($category, $categoryId, CategoryInterface::CATEGORY_ID);
+            $this->categoryResource->delete($category);
         } catch (\Exception $e) {
             throw new CouldNotDeleteException(__($e->getMessage()));
         }
