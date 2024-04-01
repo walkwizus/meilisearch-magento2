@@ -70,7 +70,8 @@ class Eav implements AttributeProviderInterface
             ->create()
             ->addIsFilterableFilter()
             ->addFieldToFilter('frontend_input', ['in' => ['select', 'multiselect', 'boolean']])
-            ->addFieldToSelect('attribute_code');
+            ->addFieldToSelect('attribute_code')
+            ->setOrder('search_weight');
 
         foreach ($attributes as $attribute) {
             $filterableAttributes[] = $attribute->getAttributeCode();
@@ -89,9 +90,8 @@ class Eav implements AttributeProviderInterface
 
         $attributes = $this->attributeCollectionFactory->create()
             ->addIsSearchableFilter()
-            ->addFieldToSelect('attribute_code');
-
-        $attributes->getSelect()->order('search_weight DESC');
+            ->addFieldToSelect('attribute_code')
+            ->setOrder('search_weight');
 
         foreach ($attributes as $attribute) {
             $searchableAttributes[] = $attribute->getAttributeCode();

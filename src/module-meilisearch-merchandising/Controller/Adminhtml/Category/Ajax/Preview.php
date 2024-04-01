@@ -39,10 +39,19 @@ class Preview extends Action implements HttpPostActionInterface
     {
         $rules = $this->getRequest()->getParam('rules');
         $storeId = $this->getRequest()->getParam('storeId');
+        $page = max((int)$this->getRequest()->getParam('page'), 1);
+        $limit = (int)$this->getRequest()->getParam('limit', 20);
 
         $filters = $this->queryBuilderService->convertRulesToMeilisearchQuery($rules);
         $indexName = $this->searchIndexNameResolver->getIndexName($storeId, 'catalog_product');
-        $result = $this->client->search($indexName, '', ['filter' => $filters]);
+
+        $offset = ($page - 1) * $limit;
+
+        $result = $this->client->search($indexName, '', [
+            'filter' => $filters,
+            'limit' => $limit,
+            'offset' => $offset
+        ]);
 
         return $this->jsonFactory->create()->setData($result->toArray());
     }

@@ -5,6 +5,8 @@
 <?php $baseUrl = $viewModel->getBaseUrl(); ?>
 <?php $productMediaUrl = $viewModel->getProductMediaUrl(); ?>
 <?php $productUrlSuffix = $viewModel->getProductUrlSuffix(); ?>
+<?php $categoryId = $block->getCurrentCategory()->getId(); ?>
+<?php $customerGroupId = $viewModel->getCustomerGroupId(); ?>
 <style>
     .ais-Hits-item { display: inline-block; }
     .ais-Hits-item > * { width: auto !important; }
@@ -51,7 +53,7 @@
             }),
             instantsearch.widgets.configure({
                 hitsPerPage: <?= $viewModel->getHitPerPage() ?>,
-                filters: 'category_ids = <?= $block->getCurrentCategory()->getId() ?>'
+                filters: '<?= ($query = $viewModel->isMerchandisingCategory($categoryId)) ? $query : "category_ids = " . $categoryId ?>'
             }),
             instantsearch.widgets.stats({
                 container: '#stats'
@@ -63,10 +65,10 @@
                     value: '<?= $viewModel->getIndexName('catalog_product') ?>'
                 },{
                     label: 'Lowest price',
-                    value: '<?= $viewModel->getIndexName('catalog_product') ?>:price_<?= $viewModel->getCustomerGroupId() ?>:asc'
+                    value: '<?= $viewModel->getIndexName('catalog_product') ?>:price_<?= $customerGroupId ?>:asc'
                 },{
                     label: 'Highest price',
-                    value: '<?= $viewModel->getIndexName('catalog_product') ?>:price_<?= $viewModel->getCustomerGroupId() ?>:desc'
+                    value: '<?= $viewModel->getIndexName('catalog_product') ?>:price_<?= $customerGroupId ?>:desc'
                 }]
             }),
             instantsearch.widgets.hits({
@@ -113,7 +115,7 @@
                         let productUrlMedia = <?= json_encode($productMediaUrl) ?>;
                         item.image_url = productUrlMedia + item.image;
 
-                        let customerGroupId = <?= $viewModel->getCustomerGroupId() ?>;
+                        let customerGroupId = <?= $customerGroupId ?>;
                         let priceFormat = <?= json_encode($viewModel->getPriceFormat()) ?>;
                         item.formattedPrice = priceUtils.formatPriceLocale(
                             item['price_' + customerGroupId],

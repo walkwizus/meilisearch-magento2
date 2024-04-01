@@ -15,7 +15,7 @@
     <button type="button" id="apply-rule" title="<?= __('Apply Rule') ?>" class="save secondary">
         <span><?= __('Apply Rule') ?></span>
     </button>
-    <button type="button" id="delete-rule" title="<?= __('Apply Rule') ?>" class="save secondary">
+    <button type="button" id="delete-rule" title="<?= __('Delete Rule') ?>" class="save secondary">
         <span><?= __('Delete Rule') ?></span>
     </button>
     <input type="hidden" id="category_id" name="category_id"/>
@@ -23,17 +23,30 @@
 </form>
 <script id="category-merchandising-preview-template" type="text/x-magento-template">
     <div class="product-list-container">
-        <div class="product-image">
-            <img src="<?= $block->getProductMediaUrl() ?>/<%- data.image %>" alt="<%- data.name %>" />
-        </div>
-        <div class="product-information">
-            <div class="product-name"><%- data.name %></div>
-            <div class="product-sku"><%- data.sku %></div>
-            <div class="product-price"><%- data.price_0 %></div>
+        <div class="product-card">
+            <div class="product-card-img">
+                <label class="stock bg-success">In Stock</label>
+                <img src="<?= $block->getProductMediaUrl() ?>/<%- data.image %>" alt="<%- data.name %>" />
+            </div>
+            <div class="product-card-body">
+                <p class="product-brand"><%- data.sku %></p>
+                <h5 class="product-name">
+                    <a href="javascript:;">
+                        <%- data.name %>
+                    </a>
+                </h5>
+                <div>
+                    <span class="selling-price"><%- data.price_0 %></span>
+                </div>
+                <div class="mt-2">
+                    <a href="javascript:;" class="btn btn1"><i class="fa fa-heart"></i></a>
+                </div>
+            </div>
         </div>
     </div>
 </script>
 <div id="category-merchandising-preview"></div>
+<button id="load-more"><?= __('Load More') ?></button>
 <div id="modal">
     <div class="modal-body-content">
         content

@@ -9,6 +9,7 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Backend\App\Action\Context;
 use Walkwizus\MeilisearchMerchandising\Api\CategoryRepositoryInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
+use Magento\Framework\Controller\ResultInterface;
 
 class GetRule extends Action implements HttpPostActionInterface
 {
@@ -25,7 +26,10 @@ class GetRule extends Action implements HttpPostActionInterface
         parent::__construct($context);
     }
 
-    public function execute()
+    /**
+     * @return ResultInterface
+     */
+    public function execute(): ResultInterface
     {
         $categoryId = $this->getRequest()->getParam('category_id');
         $json = $this->jsonFactory->create();

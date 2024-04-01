@@ -5,8 +5,52 @@ define([
     'mage/template'
 ], function($, queryBuilder, modal, template) {
     return function(config, element) {
+        let currentPage = 1;
+        const limit = 20;
+        let totalHits = 0;
+
         let qb = $(config.queryBuilderContainer).queryBuilder({
             filters: config.filters
+        });
+
+        function loadMoreItems() {
+            let rules = qb.queryBuilder('getRules');
+            if (rules && rules.valid) {
+                $.ajax(config.previewUrl, {
+                    showLoader: true,
+                    dataType: 'json',
+                    data: {
+                        form_key: window.FORM_KEY,
+                        rules: rules,
+                        storeId: config.storeId,
+                        page: currentPage,
+                        limit: limit
+                    },
+                    success: function(response) {
+                        let previewTemplate = template('#category-merchandising-preview-template');
+                        $.each(response.hits, function(i, v) {
+                            let preview = previewTemplate({ data: { ...v } });
+                            $('#category-merchandising-preview').append(preview);
+                        });
+                        currentPage++;
+                        totalHits = response.estimatedTotalHits;
+                        if ((currentPage - 1) * limit >= totalHits) {
+                            $('#load-more').hide();
+                        }
+                    }
+                });
+            }
+        }
+
+        $('#load-more').on('click', function() {
+            loadMoreItems();
+        });
+
+        $('#apply-rule').on('click', function() {
+            $('#category-merchandising-preview').empty();
+            currentPage = 1;
+            $('#load-more').show();
+            loadMoreItems();
         });
 
         $(element).submit(function(e) {
@@ -26,34 +70,6 @@ define([
                     },
                     success: function(r) {
                         $('#apply-rule').click();
-                    }
-                });
-            }
-        });
-
-        $('#apply-rule').on('click', function() {
-            let rules = qb.queryBuilder('getRules');
-
-            if (rules && rules.valid) {
-                $.ajax(config.previewUrl, {
-                    showLoader: true,
-                    dataType: 'json',
-                    data: {
-                        form_key: window.FORM_KEY,
-                        rules: rules,
-                        storeId: config.storeId
-                    },
-                    success: function(response) {
-                        let previewTemplate = template('#category-merchandising-preview-template');
-
-                        $('#category-merchandising-preview').empty();
-
-                        $.each(response.hits, function(i, v) {
-                            let preview = previewTemplate({
-                                data: { ...v }
-                            });
-                            $('#category-merchandising-preview').append(preview);
-                        });
                     }
                 });
             }

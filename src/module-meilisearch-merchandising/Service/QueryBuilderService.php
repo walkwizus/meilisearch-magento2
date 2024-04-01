@@ -44,10 +44,6 @@ class QueryBuilderService
      */
     public function convertRulesToMeilisearchQuery(array $rule): string
     {
-        if (!$rule['valid']) {
-            return '';
-        }
-
         return $this->buildQuery($rule);
     }
 

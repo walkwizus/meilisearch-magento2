@@ -15,12 +15,14 @@ use Magento\Framework\Locale\Format;
 use Magento\Customer\Model\Session;
 use Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory as AttributeCollectionFactory;
 use Magento\Swatches\Helper\Data;
+use Walkwizus\MeilisearchMerchandising\Api\CategoryRepositoryInterface;
 use Walkwizus\MeilisearchMerchandising\Api\FacetRepositoryInterface;
 use Walkwizus\MeilisearchMerchandising\Model\ResourceModel\FacetAttribute\CollectionFactory as FacetAttributeCollectionFactory;
 use Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection as AttributeCollection;
 use Magento\Customer\Api\Data\GroupInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\UrlInterface;
+use Walkwizus\MeilisearchMerchandising\Service\QueryBuilderService;
 
 class Config implements ArgumentInterface
 {
@@ -36,6 +38,7 @@ class Config implements ArgumentInterface
      * @param Data $swatchesHelper
      * @param FacetRepositoryInterface $facetRepository
      * @param FacetAttributeCollectionFactory $facetAttributeCollectionFactory
+     * @param CategoryRepositoryInterface $categoryRepository
      */
     public function __construct(
         private ServerSettings $serverSettings,
@@ -48,7 +51,9 @@ class Config implements ArgumentInterface
         private AttributeCollectionFactory $attributeCollectionFactory,
         private Data $swatchesHelper,
         private FacetRepositoryInterface $facetRepository,
-        private FacetAttributeCollectionFactory $facetAttributeCollectionFactory
+        private FacetAttributeCollectionFactory $facetAttributeCollectionFactory,
+        private CategoryRepositoryInterface $categoryRepository,
+        private QueryBuilderService $queryBuilderService
     ) { }
 
     /**
@@ -57,6 +62,21 @@ class Config implements ArgumentInterface
     public function getHelper(): MeilisearchHelper
     {
         return $this->meilisearchHelper;
+    }
+
+    /**
+     * @param $categoryId
+     * @return false|string
+     */
+    public function isMerchandisingCategory($categoryId): bool|string
+    {
+        try {
+            $categoryMerchandising = $this->categoryRepository->getByCategoryId($categoryId);
+        } catch (NoSuchEntityException $noSuchEntityException) {
+            return false;
+        }
+
+        return $this->queryBuilderService->convertRulesToMeilisearchQuery(json_decode($categoryMerchandising->getQuery(), true));
     }
 
     /**
