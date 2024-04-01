@@ -5,7 +5,7 @@ The Meilisearch extension for Magento 2 enables replacing Magento's default sear
 ## Prerequisites
 
 * Magento >= 2.4.4
-* Meilisearch >= v1.6.2
+* Meilisearch >= v1.7.4
 * PHP >= 8.1
 
 Magento 2 module install
