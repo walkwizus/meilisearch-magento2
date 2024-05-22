@@ -69,11 +69,11 @@ class Image implements AttributeMapperInterface
     /**
      * @param $productId
      * @param $storeId
-     * @return string
+     * @return mixed
      * @throws LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    protected function getProductImage($productId, $storeId): string
+    protected function getProductImage($productId, $storeId): mixed
     {
         $connection = $this->resourceConnection->getConnection();
 

@@ -42,6 +42,24 @@ class Meilisearch
     }
 
     /**
+     * @param array $queries
+     * @return mixed
+     */
+    public function multiSearch(array $queries)
+    {
+        return $this->client->multiSearch($queries);
+    }
+
+    /**
+     * @param $indexName
+     * @return array|null
+     */
+    public function getIndex($indexName)
+    {
+        return $this->client->index($indexName)->fetchRawInfo();
+    }
+
+    /**
      * @param string $indexName
      * @param array $documents
      * @param string $primaryKey

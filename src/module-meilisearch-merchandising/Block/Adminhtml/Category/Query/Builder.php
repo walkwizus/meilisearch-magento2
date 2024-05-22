@@ -6,6 +6,7 @@ namespace Walkwizus\MeilisearchMerchandising\Block\Adminhtml\Category\Query;
 
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Walkwizus\MeilisearchMerchandising\Service\QueryBuilderService;
 use Magento\Framework\Json\Helper\Data as JsonHelper;
 use Magento\Directory\Helper\Data as DirectoryHelper;
@@ -38,6 +39,9 @@ class Builder extends Template
         return $this->getUrl('meilisearch_merchandising/category/ajax_saverule');
     }
 
+    /**
+     * @return string
+     */
     public function getDeleteRuleUrl(): string
     {
         return $this->getUrl('meilisearch_merchandising/category/ajax_deleterule');
@@ -56,7 +60,23 @@ class Builder extends Template
      */
     public function getProductChooserUrl(): string
     {
-        return $this->getUrl('meilisearch_merchandising/category/merch_chooser');
+        return $this->getUrl('meilisearch_merchandising/category_ajax/chooser_sku');
+    }
+
+    /**
+     * @return string
+     */
+    public function getCategoryChooserUrl(): string
+    {
+        return $this->getUrl('meilisearch_merchandising/category_ajax/chooser_category');
+    }
+
+    /**
+     * @return string
+     */
+    public function getPromoteProductUrl(): string
+    {
+        return $this->getUrl('meilisearch_merchandising/category_ajax/promote');
     }
 
     /**
@@ -69,7 +89,7 @@ class Builder extends Template
 
     /**
      * @return false|string
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function getFilters(): bool|string
     {

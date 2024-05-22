@@ -39,6 +39,7 @@ class Config implements ArgumentInterface
      * @param FacetRepositoryInterface $facetRepository
      * @param FacetAttributeCollectionFactory $facetAttributeCollectionFactory
      * @param CategoryRepositoryInterface $categoryRepository
+     * @param QueryBuilderService $queryBuilderService
      */
     public function __construct(
         private ServerSettings $serverSettings,

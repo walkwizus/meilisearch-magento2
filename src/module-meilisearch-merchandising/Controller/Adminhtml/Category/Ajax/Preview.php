@@ -47,12 +47,29 @@ class Preview extends Action implements HttpPostActionInterface
 
         $offset = ($page - 1) * $limit;
 
-        $result = $this->client->search($indexName, '', [
+        try {
+            $promotedResult = $this->client->search('merchandising_category_' . $storeId, '' , [
+                'filter' => $filters,
+                'limit' => $limit,
+                'offset' => $offset
+            ]);
+            $promotedResult = $promotedResult->getHits();
+        } catch (\Exception $e) {
+            $promotedResult = [];
+        }
+
+        $naturalResult = $this->client->search($indexName, '', [
             'filter' => $filters,
             'limit' => $limit,
             'offset' => $offset
         ]);
+        $naturalResult = $naturalResult->getHits();
 
-        return $this->jsonFactory->create()->setData($result->toArray());
+        $result = [
+            'promoted' => $promotedResult,
+            'natural' => $naturalResult
+        ];
+
+        return $this->jsonFactory->create()->setData($result);
     }
 }

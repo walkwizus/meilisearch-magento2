@@ -9,6 +9,8 @@ define([
         const limit = 20;
         let totalHits = 0;
 
+        $('#category-promoted-products').sortable();
+
         let qb = $(config.queryBuilderContainer).queryBuilder({
             filters: config.filters
         });
@@ -27,16 +29,25 @@ define([
                         limit: limit
                     },
                     success: function(response) {
-                        let previewTemplate = template('#category-merchandising-preview-template');
-                        $.each(response.hits, function(i, v) {
-                            let preview = previewTemplate({ data: { ...v } });
+                        let promotedTemplate = template('#category-merchandising-preview-template');
+                        let naturalTemplate = template('#category-merchandising-preview-template');
+
+                        $.each(response.promoted, function(i, v) {
+                            let preview = promotedTemplate({ data: { ...v } });
+                            $('#category-promoted-products').append(preview);
+                        });
+
+                        $.each(response.natural, function(i, v) {
+                            let preview = naturalTemplate({ data: { ...v } });
                             $('#category-merchandising-preview').append(preview);
                         });
+
                         currentPage++;
-                        totalHits = response.estimatedTotalHits;
+                        totalHits = response.natural.estimatedTotalHits;
                         if ((currentPage - 1) * limit >= totalHits) {
                             $('#load-more').hide();
                         }
+                        $('#category-merchandising-preview').trigger('contentUpdated');
                     }
                 });
             }
@@ -86,7 +97,7 @@ define([
                 },
                 success: function(r) {
                     $('#query-builder').queryBuilder('setRules', [{empty: true}]);
-                    $('#category-merchandising-preview').html('');
+                    $('#category-merchandising-preview').html('').trigger('contentUpdated');
                 }
             })
         });
@@ -95,43 +106,66 @@ define([
             $('#apply-rule').click();
         });
 
+        qb.on('afterUpdateRuleFilter.queryBuilder', function(e, rule) {
+            if (rule.filter.id === 'sku') {
+                let rulePos = rule.getPos();
+                let inputValue = $('input[name="' + rule.id + '_value_' + rulePos + '"]');
+                let button = $('<button>').text('choose product(s)').addClass('btn btn-primary');
+
+                inputValue.after(button);
+
+                button.on('click', function() {
+                    config.selectedSkuInput = inputValue;
+                    $('#chooser-sku-modal').modal('openModal');
+                });
+            }
+        });
+
+        $('body').on('click', '.promote-product', function(e) {
+            e.preventDefault();
+
+            let categoryId = $('#category_id').val();
+            let productId = $(this).data('product-id');
+
+            $.ajax(config.promoteProductUrl, {
+                showLoader: true,
+                dataType: 'json',
+                data: {
+                    form_key: window.FORM_KEY,
+                    product_id: productId,
+                    store_id: config.storeId,
+                    category_id: categoryId
+                },
+                success: function(r) {
+                    console.log(r);
+                }
+            });
+        });
+
         let options = {
             type: 'slide',
             responsive: true,
-            title: 'Main title',
+            title: 'Choose Product(s)',
             buttons: [{
-                text: $.mage.__('Ok'),
-                class: '',
+                text: $.mage.__('Validate'),
+                class: 'action',
                 click: function () {
                     this.closeModal();
                 }
             }],
             opened: function() {
-                new Ajax.Request('meilisearch_merchandising/category/merch_chooser/', {
-                    evalScripts: true,
-                    parameters: {
-                        'form_key': FORM_KEY
+                $.ajax(config.productChooserUrl, {
+                    showLoader: true,
+                    data: {
+                        form_key: window.FORM_KEY
                     },
-                    onSuccess: function(t) {
-                        $('.modal-body-content').html(t.responseText);
-                    }.bind(this)
+                    success: function(r) {
+                        $('.modal-body-content').html(r);
+                    }
                 });
             }
         };
 
-        qb.on('afterUpdateRuleFilter.queryBuilder', function(e, rule) {
-            if (rule.filter.id === 'sku') {
-                let input = $(rule.$el).find('.rule-value-container input');
-                let button = $('<button>').text('Mon Bouton').addClass('btn btn-primary');
-
-                input.after(button);
-
-                button.on('click', function() {
-                    $('#modal').modal('openModal');
-                });
-            }
-        });
-
-        modal(options, $('#modal'));
+        modal(options, $('#chooser-sku-modal'));
     }
 });

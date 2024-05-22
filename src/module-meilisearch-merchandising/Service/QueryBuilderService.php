@@ -70,17 +70,33 @@ class QueryBuilderService
         } else {
             $field = $this->attributeNameResolver->getName($rule['field'], 'catalog_product');
             $operator = $this->operatorMapper[$rule['operator']];
-            if (is_array($rule['value'])) {
-                $value = "[" . implode(", ", array_map(function ($val) {
-                        return is_numeric($val) ? $val : "\"$val\"";
-                    }, $rule['value'])) . "]";
+            $valueType = $rule['type'];
+
+            if (in_array($operator, ['IN', 'NOT IN'])) {
+                $values = is_array($rule['value']) ? $rule['value'] : [$rule['value']];
+                $formattedValues = array_map(function ($val) use ($valueType) {
+                    return $this->formatValue($val, $valueType);
+                }, $values);
+                $value = "[" . implode(", ", $formattedValues) . "]";
             } else {
-                $value = (is_numeric($rule['value'])) ? $rule['value'] : "\"{$rule['value']}\"";
+                $value = $this->formatValue($rule['value'], $valueType);
             }
+
             $meilisearchQuery = "$field $operator $value";
         }
 
         return $meilisearchQuery;
+    }
+
+    private function formatValue($val, $type): string
+    {
+        if ($type === 'boolean') {
+            return $val ? '1' : '0';
+        } elseif (is_numeric($val)) {
+            return $val;
+        } else {
+            return "\"$val\"";
+        }
     }
 
     /**
@@ -102,14 +118,9 @@ class QueryBuilderService
             switch ($attribute['type']) {
                 case 'text':
                     $rule['type'] = 'string';
-                    $rule['operators'] = ['contains', 'not_contains'];
+                    $rule['operators'] = ['in', 'not_in'];
                     break;
                 case 'select':
-                    $rule['type'] = 'integer';
-                    $rule['input'] = 'select';
-                    $rule['operators'] = ['equal', 'not_equal'];
-                    $rule['values'] = $this->getSelectValues($attribute['code']);
-                    break;
                 case 'multiselect':
                     $rule['type'] = 'integer';
                     $rule['input'] = 'select';

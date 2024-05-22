@@ -19,7 +19,7 @@ class AttributeRuleProvider
         'stock',
     ];
 
-    private array $additionnalAttributes = [
+    private array $additionalAttributes = [
         'price',
     ];
 
@@ -47,7 +47,7 @@ class AttributeRuleProvider
 
         $attributeCollection = $this->attributeCollectionFactory
             ->create()
-            ->addFieldToFilter('attribute_code', ['in' => array_merge(array_values($filteredAttributes), $this->additionnalAttributes)]);
+            ->addFieldToFilter('attribute_code', ['in' => array_merge(array_values($filteredAttributes), $this->additionalAttributes)]);
 
         $attributes = [];
         /** @var ProductAttributeInterface $attribute */

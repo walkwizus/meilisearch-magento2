@@ -23,6 +23,7 @@ class Eav implements AttributeProviderInterface
         'visibility',
         'type_id',
         'stock',
+        'sku'
     ];
 
     /**
