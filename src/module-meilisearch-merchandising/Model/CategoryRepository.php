@@ -14,13 +14,26 @@ use Magento\Framework\Exception\CouldNotSaveException;
 class CategoryRepository implements CategoryRepositoryInterface
 {
     /**
+     * @var Category
+     */
+    private Category $categoryResource;
+
+    /**
+     * @var CategoryFactory
+     */
+    private CategoryFactory $categoryFactory;
+
+    /**
      * @param Category $categoryResource
      * @param CategoryFactory $categoryFactory
      */
     public function __construct(
-        private Category $categoryResource,
-        private CategoryFactory $categoryFactory
-    ) { }
+        Category $categoryResource,
+        CategoryFactory $categoryFactory
+    ) {
+        $this->categoryResource = $categoryResource;
+        $this->categoryFactory = $categoryFactory;
+    }
 
     /**
      * @param $id

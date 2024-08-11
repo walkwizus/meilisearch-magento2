@@ -7,9 +7,14 @@ namespace Walkwizus\MeilisearchBase\SearchAdapter\Query;
 class ValueTransformerPool
 {
     /**
+     * @var array|ValueTransformerInterface[]
+     */
+    private array $transformers;
+
+    /**
      * @param ValueTransformerInterface[] $valueTransformers
      */
-    public function __construct(private array $valueTransformers = [])
+    public function __construct(array $valueTransformers = [])
     {
         foreach ($valueTransformers as $valueTransformer) {
             if (!$valueTransformer instanceof ValueTransformerInterface) {

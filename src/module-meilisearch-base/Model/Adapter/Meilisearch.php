@@ -17,12 +17,19 @@ class Meilisearch
     protected ?Client $client;
 
     /**
+     * @var ConnectionManager
+     */
+    private ConnectionManager $connectionManager;
+
+    /**
      * @param ConnectionManager $connectionManager
      * @throws LocalizedException
      */
     public function __construct(
-        private ConnectionManager $connectionManager
+        ConnectionManager $connectionManager
     ) {
+        $this->connectionManager = $connectionManager;
+
         try {
             $this->client = $this->connectionManager->getConnection();
         } catch (\Exception $e) {

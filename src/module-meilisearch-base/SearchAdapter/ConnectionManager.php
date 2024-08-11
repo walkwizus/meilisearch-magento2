@@ -18,15 +18,34 @@ class ConnectionManager
     protected ?Client $client = null;
 
     /**
+     * @var LoggerInterface
+     */
+    private LoggerInterface $logger;
+
+    /**
+     * @var ServerSettings
+     */
+    private ServerSettings $serverSettings;
+
+    /**
+     * @var HttpClient
+     */
+    private HttpClient $httpClient;
+
+    /**
      * @param LoggerInterface $logger
      * @param ServerSettings $serverSettings
      * @param HttpClient $httpClient
      */
     public function __construct(
-        private LoggerInterface $logger,
-        private ServerSettings $serverSettings,
-        private HttpClient $httpClient
-    ) { }
+        LoggerInterface $logger,
+        ServerSettings $serverSettings,
+        HttpClient $httpClient
+    ) {
+        $this->logger = $logger;
+        $this->serverSettings = $serverSettings;
+        $this->httpClient = $httpClient;
+    }
 
     /**
      * @return Client|null

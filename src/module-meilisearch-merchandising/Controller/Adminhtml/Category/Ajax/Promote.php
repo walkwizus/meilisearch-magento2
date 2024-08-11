@@ -14,6 +14,26 @@ use Walkwizus\MeilisearchBase\Model\Adapter\Meilisearch;
 class Promote extends Action
 {
     /**
+     * @var FullFactory
+     */
+    private FullFactory $fullFactory;
+
+    /**
+     * @var AttributeMapper
+     */
+    private AttributeMapper $attributeMapper;
+
+    /**
+     * @var SettingsInterface
+     */
+    private SettingsInterface $settings;
+
+    /**
+     * @var Meilisearch
+     */
+    private Meilisearch $meilisearchAdapter;
+
+    /**
      * @param Context $context
      * @param FullFactory $fullFactory
      * @param AttributeMapper $attributeMapper
@@ -22,11 +42,15 @@ class Promote extends Action
      */
     public function __construct(
         Context $context,
-        private FullFactory $fullFactory,
-        private AttributeMapper $attributeMapper,
-        private SettingsInterface $settings,
-        private Meilisearch $meilisearchAdapter
+        FullFactory $fullFactory,
+        AttributeMapper $attributeMapper,
+        SettingsInterface $settings,
+        Meilisearch $meilisearchAdapter
     ) {
+        $this->fullFactory = $fullFactory;
+        $this->attributeMapper = $attributeMapper;
+        $this->settings = $settings;
+        $this->meilisearchAdapter = $meilisearchAdapter;
         parent::__construct($context);
     }
 

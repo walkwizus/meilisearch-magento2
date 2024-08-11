@@ -18,17 +18,42 @@ class Builder
     private const MEILISEARCH_DEFAULT_PAGE_SIZE = 1000;
 
     /**
+     * @var SearchIndexNameResolver
+     */
+    private SearchIndexNameResolver $searchIndexNameResolver;
+
+    /**
+     * @var AggregationBuilder
+     */
+    private AggregationBuilder $aggregationBuilder;
+
+    /**
+     * @var Sort
+     */
+    private Sort $sort;
+
+    /**
+     * @var ScopeResolverInterface
+     */
+    private ScopeResolverInterface $scopeResolver;
+
+    /**
      * @param SearchIndexNameResolver $searchIndexNameResolver
      * @param AggregationBuilder $aggregationBuilder
      * @param Sort $sort
      * @param ScopeResolverInterface $scopeResolver
      */
     public function __construct(
-        private SearchIndexNameResolver $searchIndexNameResolver,
-        private AggregationBuilder $aggregationBuilder,
-        private Sort $sort,
-        private ScopeResolverInterface $scopeResolver
-    ) { }
+        SearchIndexNameResolver $searchIndexNameResolver,
+        AggregationBuilder $aggregationBuilder,
+        Sort $sort,
+        ScopeResolverInterface $scopeResolver
+    ) {
+        $this->searchIndexNameResolver = $searchIndexNameResolver;
+        $this->aggregationBuilder = $aggregationBuilder;
+        $this->sort = $sort;
+        $this->scopeResolver = $scopeResolver;
+    }
 
     /**
      * Set initial settings for query

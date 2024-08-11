@@ -14,11 +14,17 @@ use Magento\Framework\Api\Search\DocumentInterface;
 class DocumentFactory
 {
     /**
+     * @var EntityMetadata
+     */
+    private EntityMetadata $entityMetadata;
+
+    /**
      * @param EntityMetadata $entityMetadata
      */
-    public function __construct(
-        private EntityMetadata $entityMetadata
-    ) { }
+    public function __construct(EntityMetadata $entityMetadata)
+    {
+        $this->entityMetadata = $entityMetadata;
+    }
 
     /**
      * @param $rawDocument

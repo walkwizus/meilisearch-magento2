@@ -7,11 +7,17 @@ namespace Walkwizus\MeilisearchBase\Index;
 class AttributeNameResolver
 {
     /**
+     * @var array
+     */
+    private array $resolvers = [];
+
+    /**
      * @param array $resolvers
      */
-    public function __construct(
-        private array $resolvers = []
-    ) { }
+    public function __construct(array $resolvers = [])
+    {
+        $this->resolvers = $resolvers;
+    }
 
     /**
      * @param string $attributeName

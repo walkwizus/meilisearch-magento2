@@ -15,6 +15,11 @@ use Magento\Framework\UrlInterface;
 class Builder extends Template
 {
     /**
+     * @var QueryBuilderService
+     */
+    private QueryBuilderService $queryBuilderService;
+
+    /**
      * @param Context $context
      * @param QueryBuilderService $queryBuilderService
      * @param array $data
@@ -23,11 +28,12 @@ class Builder extends Template
      */
     public function __construct(
         Template\Context $context,
-        private QueryBuilderService $queryBuilderService,
+        QueryBuilderService $queryBuilderService,
         array $data = [],
         ?JsonHelper $jsonHelper = null,
         ?DirectoryHelper $directoryHelper = null
     ) {
+        $this->queryBuilderService = $queryBuilderService;
         parent::__construct($context, $data, $jsonHelper, $directoryHelper);
     }
 

@@ -14,6 +14,36 @@ use Psr\Log\LoggerInterface;
 class Adapter implements AdapterInterface
 {
     /**
+     * @var Meilisearch
+     */
+    private Meilisearch $client;
+
+    /**
+     * @var Mapper
+     */
+    private Mapper $mapper;
+
+    /**
+     * @var ResponseFactory
+     */
+    private ResponseFactory $responseFactory;
+
+    /**
+     * @var AggregationBuilder
+     */
+    private AggregationBuilder $aggregationBuilder;
+
+    /**
+     * @var QueryContainerFactory
+     */
+    private QueryContainerFactory $queryContainerFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    private LoggerInterface $logger;
+
+    /**
      * @param Meilisearch $client
      * @param Mapper $mapper
      * @param ResponseFactory $responseFactory
@@ -22,13 +52,20 @@ class Adapter implements AdapterInterface
      * @param LoggerInterface $logger
      */
     public function __construct(
-        private Meilisearch $client,
-        private Mapper $mapper,
-        private ResponseFactory $responseFactory,
-        private AggregationBuilder $aggregationBuilder,
-        private QueryContainerFactory $queryContainerFactory,
-        private LoggerInterface $logger
-    ) { }
+        Meilisearch $client,
+        Mapper $mapper,
+        ResponseFactory $responseFactory,
+        AggregationBuilder $aggregationBuilder,
+        QueryContainerFactory $queryContainerFactory,
+        LoggerInterface $logger
+    ) {
+        $this->client = $client;
+        $this->mapper = $mapper;
+        $this->responseFactory = $responseFactory;
+        $this->aggregationBuilder = $aggregationBuilder;
+        $this->queryContainerFactory = $queryContainerFactory;
+        $this->logger = $logger;
+    }
 
     /**
      * @param RequestInterface $request

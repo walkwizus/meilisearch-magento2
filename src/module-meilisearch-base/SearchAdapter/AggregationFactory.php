@@ -9,11 +9,17 @@ use Magento\Framework\ObjectManagerInterface;
 class AggregationFactory
 {
     /**
+     * @var ObjectManagerInterface
+     */
+    private ObjectManagerInterface $objectManager;
+
+    /**
      * @param ObjectManagerInterface $objectManager
      */
-    public function __construct(
-        private ObjectManagerInterface $objectManager
-    ) { }
+    public function __construct(ObjectManagerInterface $objectManager)
+    {
+        $this->objectManager = $objectManager;
+    }
 
     /**
      * @param array $rawAggregation

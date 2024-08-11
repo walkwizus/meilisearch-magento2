@@ -12,6 +12,11 @@ use Magento\Framework\UrlInterface;
 class FacetActions extends Column
 {
     /**
+     * @var UrlInterface
+     */
+    private UrlInterface $urlBuilder;
+
+    /**
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
      * @param UrlInterface $urlBuilder
@@ -21,10 +26,11 @@ class FacetActions extends Column
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
-        private UrlInterface $urlBuilder,
+        UrlInterface $urlBuilder,
         array $components = [],
         array $data = []
     ) {
+        $this->urlBuilder = $urlBuilder;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 

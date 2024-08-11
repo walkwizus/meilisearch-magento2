@@ -27,6 +27,71 @@ use Walkwizus\MeilisearchMerchandising\Service\QueryBuilderService;
 class Config implements ArgumentInterface
 {
     /**
+     * @var ServerSettings
+     */
+    private ServerSettings $serverSettings;
+
+    /**
+     * @var MeilisearchHelper
+     */
+    private MeilisearchHelper $meilisearchHelper;
+
+    /**
+     * @var SearchIndexNameResolver
+     */
+    private SearchIndexNameResolver $searchIndexNameResolver;
+
+    /**
+     * @var ScopeConfigInterface
+     */
+    private ScopeConfigInterface $scopeConfig;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    private StoreManagerInterface $storeManager;
+
+    /**
+     * @var Format
+     */
+    private Format $localeFormat;
+
+    /**
+     * @var Session
+     */
+    private Session $customerSession;
+
+    /**
+     * @var AttributeCollectionFactory
+     */
+    private AttributeCollectionFactory $attributeCollectionFactory;
+
+    /**
+     * @var Data
+     */
+    private Data $swatchesHelper;
+
+    /**
+     * @var FacetRepositoryInterface
+     */
+    private FacetRepositoryInterface $facetRepository;
+
+    /**
+     * @var FacetAttributeCollectionFactory
+     */
+    private FacetAttributeCollectionFactory $facetAttributeCollectionFactory;
+
+    /**
+     * @var CategoryRepositoryInterface
+     */
+    private CategoryRepositoryInterface $categoryRepository;
+
+    /**
+     * @var QueryBuilderService
+     */
+    private QueryBuilderService $queryBuilderService;
+
+    /**
      * @param ServerSettings $serverSettings
      * @param MeilisearchHelper $meilisearchHelper
      * @param SearchIndexNameResolver $searchIndexNameResolver
@@ -42,20 +107,34 @@ class Config implements ArgumentInterface
      * @param QueryBuilderService $queryBuilderService
      */
     public function __construct(
-        private ServerSettings $serverSettings,
-        private MeilisearchHelper $meilisearchHelper,
-        private SearchIndexNameResolver $searchIndexNameResolver,
-        private ScopeConfigInterface $scopeConfig,
-        private StoreManagerInterface $storeManager,
-        private Format $localeFormat,
-        private Session $customerSession,
-        private AttributeCollectionFactory $attributeCollectionFactory,
-        private Data $swatchesHelper,
-        private FacetRepositoryInterface $facetRepository,
-        private FacetAttributeCollectionFactory $facetAttributeCollectionFactory,
-        private CategoryRepositoryInterface $categoryRepository,
-        private QueryBuilderService $queryBuilderService
-    ) { }
+        ServerSettings $serverSettings,
+        MeilisearchHelper $meilisearchHelper,
+        SearchIndexNameResolver $searchIndexNameResolver,
+        ScopeConfigInterface $scopeConfig,
+        StoreManagerInterface $storeManager,
+        Format $localeFormat,
+        Session $customerSession,
+        AttributeCollectionFactory $attributeCollectionFactory,
+        Data $swatchesHelper,
+        FacetRepositoryInterface $facetRepository,
+        FacetAttributeCollectionFactory $facetAttributeCollectionFactory,
+        CategoryRepositoryInterface $categoryRepository,
+        QueryBuilderService $queryBuilderService
+    ) {
+        $this->serverSettings = $serverSettings;
+        $this->meilisearchHelper = $meilisearchHelper;
+        $this->searchIndexNameResolver = $searchIndexNameResolver;
+        $this->scopeConfig = $scopeConfig;
+        $this->storeManager = $storeManager;
+        $this->localeFormat = $localeFormat;
+        $this->customerSession = $customerSession;
+        $this->attributeCollectionFactory = $attributeCollectionFactory;
+        $this->swatchesHelper = $swatchesHelper;
+        $this->facetRepository = $facetRepository;
+        $this->facetAttributeCollectionFactory = $facetAttributeCollectionFactory;
+        $this->categoryRepository = $categoryRepository;
+        $this->queryBuilderService = $queryBuilderService;
+    }
 
     /**
      * @return MeilisearchHelper

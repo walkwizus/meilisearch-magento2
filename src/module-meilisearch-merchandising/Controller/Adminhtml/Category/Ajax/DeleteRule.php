@@ -16,6 +16,21 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 class DeleteRule extends Action implements HttpPostActionInterface
 {
     /**
+     * @var JsonFactory
+     */
+    private JsonFactory $jsonFactory;
+
+    /**
+     * @var CategoryFactory
+     */
+    private CategoryFactory $categoryFactory;
+
+    /**
+     * @var CategoryRepositoryInterface
+     */
+    private CategoryRepositoryInterface $categoryRepository;
+
+    /**
      * @param Context $context
      * @param JsonFactory $jsonFactory
      * @param CategoryFactory $categoryFactory
@@ -23,10 +38,13 @@ class DeleteRule extends Action implements HttpPostActionInterface
      */
     public function __construct(
         Context $context,
-        private JsonFactory $jsonFactory,
-        private CategoryFactory $categoryFactory,
-        private CategoryRepositoryInterface $categoryRepository
+        JsonFactory $jsonFactory,
+        CategoryFactory $categoryFactory,
+        CategoryRepositoryInterface $categoryRepository
     ) {
+        $this->jsonFactory = $jsonFactory;
+        $this->categoryFactory = $categoryFactory;
+        $this->categoryRepository = $categoryRepository;
         parent::__construct($context);
     }
 

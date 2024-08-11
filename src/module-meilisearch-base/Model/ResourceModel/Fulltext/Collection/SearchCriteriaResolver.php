@@ -9,7 +9,31 @@ use Magento\Framework\Api\Search\SearchCriteria;
 class SearchCriteriaResolver implements SearchCriteriaResolverInterface
 {
     /**
-     * SearchCriteriaResolver constructor.
+     * @var SearchCriteriaBuilder
+     */
+    private SearchCriteriaBuilder $builder;
+
+    /**
+     * @var string
+     */
+    private string $searchRequestName;
+
+    /**
+     * @var int
+     */
+    private int $currentPage;
+
+    /**
+     * @var int
+     */
+    private int $size;
+
+    /**
+     * @var array|null
+     */
+    private ?array $orders;
+
+    /**
      * @param SearchCriteriaBuilder $builder
      * @param string $searchRequestName
      * @param int $currentPage
@@ -17,12 +41,18 @@ class SearchCriteriaResolver implements SearchCriteriaResolverInterface
      * @param array|null $orders
      */
     public function __construct(
-        private SearchCriteriaBuilder $builder,
-        private string $searchRequestName,
-        private int $currentPage,
-        private int $size,
-        private ?array $orders
-    ) { }
+        SearchCriteriaBuilder $builder,
+        string $searchRequestName,
+        int $currentPage,
+        int $size,
+        ?array $orders
+    ) {
+        $this->builder = $builder;
+        $this->searchRequestName = $searchRequestName;
+        $this->currentPage = $currentPage;
+        $this->size = $size;
+        $this->orders = $orders;
+    }
 
     /**
      * @inheritdoc

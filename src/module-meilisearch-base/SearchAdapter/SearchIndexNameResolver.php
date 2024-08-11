@@ -12,11 +12,17 @@ class SearchIndexNameResolver
     const DEFAULT_INDEX = 'catalog_product';
 
     /**
+     * @var IndexSettings
+     */
+    private IndexSettings $indexSettings;
+
+    /**
      * @param IndexSettings $indexSettings
      */
-    public function __construct(
-        private IndexSettings $indexSettings
-    ) { }
+    public function __construct(IndexSettings $indexSettings)
+    {
+        $this->indexSettings = $indexSettings;
+    }
 
     /**
      * @param $storeId

@@ -18,6 +18,31 @@ use Walkwizus\MeilisearchBase\Model\Indexer\BaseIndexerHandler;
 class FacetAttributeUpdater
 {
     /**
+     * @var GetRefinementListService
+     */
+    private GetRefinementListService $getRefinementListService;
+
+    /**
+     * @var FacetFactory
+     */
+    private FacetFactory $facetFactory;
+
+    /**
+     * @var FacetAttributeFactory
+     */
+    private FacetAttributeFactory $facetAttributeFactory;
+
+    /**
+     * @var FacetRepositoryInterface
+     */
+    private FacetRepositoryInterface $facetRepository;
+
+    /**
+     * @var FacetAttributeRepositoryInterface
+     */
+    private FacetAttributeRepositoryInterface $facetAttributeRepository;
+
+    /**
      * @param GetRefinementListService $getRefinementListService
      * @param FacetFactory $facetFactory
      * @param FacetAttributeFactory $facetAttributeFactory
@@ -25,12 +50,18 @@ class FacetAttributeUpdater
      * @param FacetAttributeRepositoryInterface $facetAttributeRepository
      */
     public function __construct(
-        private GetRefinementListService $getRefinementListService,
-        private FacetFactory $facetFactory,
-        private FacetAttributeFactory $facetAttributeFactory,
-        private FacetRepositoryInterface $facetRepository,
-        private FacetAttributeRepositoryInterface $facetAttributeRepository
-    ) { }
+        GetRefinementListService $getRefinementListService,
+        FacetFactory $facetFactory,
+        FacetAttributeFactory $facetAttributeFactory,
+        FacetRepositoryInterface $facetRepository,
+        FacetAttributeRepositoryInterface $facetAttributeRepository
+    ) {
+        $this->getRefinementListService = $getRefinementListService;
+        $this->facetFactory = $facetFactory;
+        $this->facetAttributeFactory = $facetAttributeFactory;
+        $this->facetRepository = $facetRepository;
+        $this->facetAttributeRepository = $facetAttributeRepository;
+    }
 
     /**
      * @param BaseIndexerHandler $subject

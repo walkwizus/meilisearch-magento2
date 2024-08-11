@@ -12,6 +12,11 @@ use Magento\Framework\Json\Helper\Data as JsonHelper;
 class Tree extends Template
 {
     /**
+     * @var CategoryManagementInterface
+     */
+    private CategoryManagementInterface $categoryManagement;
+
+    /**
      * @param Template\Context $context
      * @param CategoryManagementInterface $categoryManagement
      * @param array $data
@@ -20,11 +25,12 @@ class Tree extends Template
      */
     public function __construct(
         Template\Context $context,
-        private CategoryManagementInterface $categoryManagement,
+        CategoryManagementInterface $categoryManagement,
         array $data = [],
         ?JsonHelper $jsonHelper = null,
         ?DirectoryHelper $directoryHelper = null
     ) {
+        $this->categoryManagement = $categoryManagement;
         parent::__construct($context, $data, $jsonHelper, $directoryHelper);
     }
 

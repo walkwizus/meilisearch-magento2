@@ -14,15 +14,27 @@ use Magento\Framework\Controller\ResultInterface;
 class GetRule extends Action implements HttpPostActionInterface
 {
     /**
+     * @var CategoryRepositoryInterface
+     */
+    private CategoryRepositoryInterface $categoryRepository;
+
+    /**
+     * @var JsonFactory
+     */
+    private JsonFactory $jsonFactory;
+
+    /**
      * @param Context $context
      * @param CategoryRepositoryInterface $categoryRepository
      * @param JsonFactory $jsonFactory
      */
     public function __construct(
         Context $context,
-        private CategoryRepositoryInterface $categoryRepository,
-        private JsonFactory $jsonFactory
+        CategoryRepositoryInterface $categoryRepository,
+        JsonFactory $jsonFactory
     ) {
+        $this->categoryRepository = $categoryRepository;
+        $this->jsonFactory = $jsonFactory;
         parent::__construct($context);
     }
 
