@@ -38,6 +38,14 @@ class Meilisearch
     }
 
     /**
+     * @return bool
+     */
+    public function isHealthy(): bool
+    {
+        return $this->client->isHealthy();
+    }
+
+    /**
      * @param $index
      * @param string $query
      * @param array $params
