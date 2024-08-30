@@ -13,26 +13,13 @@ use Magento\Framework\Exception\NoSuchEntityException;
 class FacetRepository implements FacetRepositoryInterface
 {
     /**
-     * @var Facet
-     */
-    private Facet $facetResource;
-
-    /**
-     * @var FacetFactory
-     */
-    private FacetFactory $facetFactory;
-
-    /**
      * @param Facet $facetResource
      * @param FacetFactory $facetFactory
      */
     public function __construct(
-        Facet $facetResource,
-        FacetFactory $facetFactory
-    ) {
-        $this->facetResource = $facetResource;
-        $this->facetFactory = $facetFactory;
-    }
+        private Facet $facetResource,
+        private FacetFactory $facetFactory
+    ) { }
 
     /**
      * @param int $id

@@ -14,31 +14,6 @@ class Interval implements IntervalInterface
     const DELTA = 0.005;
 
     /**
-     * @var ConnectionManager
-     */
-    private ConnectionManager $connectionManager;
-
-    /**
-     * @var SearchIndexNameResolver
-     */
-    private SearchIndexNameResolver $searchIndexNameResolver;
-
-    /**
-     * @var string
-     */
-    private string $fieldName;
-
-    /**
-     * @var string
-     */
-    private string $storeId;
-
-    /**
-     * @var array
-     */
-    private array $entityIds;
-
-    /**
      * @param ConnectionManager $connectionManager
      * @param SearchIndexNameResolver $searchIndexNameResolver
      * @param string $fieldName
@@ -46,18 +21,12 @@ class Interval implements IntervalInterface
      * @param array $entityIds
      */
     public function __construct(
-        ConnectionManager $connectionManager,
-        SearchIndexNameResolver $searchIndexNameResolver,
-        string $fieldName,
-        string $storeId,
-        array $entityIds
-    ) {
-        $this->connectionManager = $connectionManager;
-        $this->searchIndexNameResolver = $searchIndexNameResolver;
-        $this->fieldName = $fieldName;
-        $this->storeId = $storeId;
-        $this->entityIds = $entityIds;
-    }
+        private ConnectionManager $connectionManager,
+        private SearchIndexNameResolver $searchIndexNameResolver,
+        private string $fieldName,
+        private string $storeId,
+        private array $entityIds
+    ) { }
 
     /**
      * @param $limit

@@ -7,17 +7,11 @@ namespace Walkwizus\MeilisearchBase\SearchAdapter;
 class QueryContainer
 {
     /**
-     * @var array
-     */
-    private array $query;
-
-    /**
      * @param array $query
      */
-    public function __construct(array $query)
-    {
-        $this->query = $query;
-    }
+    public function __construct(
+        private array $query
+    ) { }
 
     /**
      * @return array

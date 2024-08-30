@@ -16,19 +16,13 @@ use Magento\Backend\Model\View\Result\Redirect;
 class Save extends Action implements HttpPostActionInterface
 {
     /**
-     * @var FacetAttributeRepositoryInterface
-     */
-    private FacetAttributeRepositoryInterface $facetAttributeRepository;
-
-    /**
      * @param Context $context
      * @param FacetAttributeRepositoryInterface $facetAttributeRepository
      */
     public function __construct(
         Context $context,
-        FacetAttributeRepositoryInterface $facetAttributeRepository
+        private FacetAttributeRepositoryInterface $facetAttributeRepository
     ) {
-        $this->facetAttributeRepository = $facetAttributeRepository;
         parent::__construct($context);
     }
 

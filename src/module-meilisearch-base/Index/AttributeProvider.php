@@ -9,17 +9,11 @@ use Walkwizus\MeilisearchBase\Api\Index\AttributeProviderInterface;
 class AttributeProvider
 {
     /**
-     * @var array
-     */
-    private array $providers = [];
-
-    /**
      * @param AttributeProviderInterface[] $providers
      */
-    public function __construct(array $providers = [])
-    {
-        $this->providers = $providers;
-    }
+    public function __construct(
+        private array $providers = []
+    ) { }
 
     /**
      * @param string $indexName

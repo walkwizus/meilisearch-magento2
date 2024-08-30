@@ -15,34 +15,15 @@ use Magento\Framework\Exception\LocalizedException;
 class GetRefinementListService
 {
     /**
-     * @var AttributeProvider
-     */
-    private AttributeProvider $attributeProvider;
-
-    /**
-     * @var AttributeCollectionFactory
-     */
-    private AttributeCollectionFactory $attributeCollectionFactory;
-
-    /**
-     * @var State
-     */
-    private State $state;
-
-    /**
      * @param AttributeProvider $attributeProvider
      * @param AttributeCollectionFactory $attributeCollectionFactory
      * @param State $state
      */
     public function __construct(
-        AttributeProvider $attributeProvider,
-        AttributeCollectionFactory $attributeCollectionFactory,
-        State $state
-    ) {
-        $this->attributeProvider = $attributeProvider;
-        $this->attributeCollectionFactory = $attributeCollectionFactory;
-        $this->state = $state;
-    }
+        private AttributeProvider $attributeProvider,
+        private AttributeCollectionFactory $attributeCollectionFactory,
+        private State $state
+    ) { }
 
     /**
      * @param string $indexName

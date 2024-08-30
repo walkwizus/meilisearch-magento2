@@ -28,34 +28,15 @@ class QueryBuilderService
     ];
 
     /**
-     * @var AttributeRuleProvider
-     */
-    private AttributeRuleProvider $attributeRuleProvider;
-
-    /**
-     * @var AttributeRepositoryInterface
-     */
-    private AttributeRepositoryInterface $attributeRepository;
-
-    /**
-     * @var AttributeNameResolver
-     */
-    private AttributeNameResolver $attributeNameResolver;
-
-    /**
      * @param AttributeRuleProvider $attributeRuleProvider
      * @param AttributeRepositoryInterface $attributeRepository
      * @param AttributeNameResolver $attributeNameResolver
      */
     public function __construct(
-        AttributeRuleProvider $attributeRuleProvider,
-        AttributeRepositoryInterface $attributeRepository,
-        AttributeNameResolver $attributeNameResolver
-    ) {
-        $this->attributeRuleProvider = $attributeRuleProvider;
-        $this->attributeRepository = $attributeRepository;
-        $this->attributeNameResolver = $attributeNameResolver;
-    }
+        private AttributeRuleProvider $attributeRuleProvider,
+        private AttributeRepositoryInterface $attributeRepository,
+        private AttributeNameResolver $attributeNameResolver
+    ) { }
 
     /**
      * @param array $rule

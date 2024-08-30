@@ -17,26 +17,13 @@ use Magento\Framework\Search\Request;
 class Mapper
 {
     /**
-     * @var QueryBuilder
-     */
-    private QueryBuilder $queryBuilder;
-
-    /**
-     * @var MatchQueryBuilder
-     */
-    private MatchQueryBuilder $matchQueryBuilder;
-
-    /**
      * @param QueryBuilder $queryBuilder
      * @param MatchQueryBuilder $matchQueryBuilder
      */
     public function __construct(
-        QueryBuilder $queryBuilder,
-        MatchQueryBuilder $matchQueryBuilder
-    ) {
-        $this->queryBuilder = $queryBuilder;
-        $this->matchQueryBuilder = $matchQueryBuilder;
-    }
+        private QueryBuilder $queryBuilder,
+        private MatchQueryBuilder $matchQueryBuilder
+    ) { }
 
     /**
      * Build adapter dependent query

@@ -11,18 +11,11 @@ use Magento\Catalog\Model\Product\Visibility;
 class Engine implements EngineInterface
 {
     /**
-     * @var Visibility
-     */
-    private Visibility $catalogProductVisibility;
-
-    /**
      * @param Visibility $catalogProductVisibility
      */
     public function __construct(
-        Visibility $catalogProductVisibility
-    ) {
-        $this->catalogProductVisibility = $catalogProductVisibility;
-    }
+        private Visibility $catalogProductVisibility
+    ) { }
 
     /**
      * @return array

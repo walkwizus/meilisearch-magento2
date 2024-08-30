@@ -13,26 +13,13 @@ use Magento\Framework\Exception\CouldNotSaveException;
 class FacetAttributeRepository implements FacetAttributeRepositoryInterface
 {
     /**
-     * @var FacetAttributeResource
-     */
-    private FacetAttributeResource $facetAttributeResource;
-
-    /**
-     * @var FacetAttributeFactory
-     */
-    private FacetAttributeFactory $facetAttributeFactory;
-
-    /**
      * @param FacetAttributeResource $facetAttributeResource
      * @param FacetAttributeFactory $facetAttributeFactory
      */
     public function __construct(
-        FacetAttributeResource $facetAttributeResource,
-        FacetAttributeFactory $facetAttributeFactory
-    ) {
-        $this->facetAttributeResource = $facetAttributeResource;
-        $this->facetAttributeFactory = $facetAttributeFactory;
-    }
+        private FacetAttributeResource $facetAttributeResource,
+        private FacetAttributeFactory $facetAttributeFactory
+    ) { }
 
     /**
      * @param $id

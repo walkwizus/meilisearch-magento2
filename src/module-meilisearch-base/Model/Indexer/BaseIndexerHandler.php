@@ -14,46 +14,6 @@ use Magento\Framework\Indexer\SaveHandler\Batch;
 class BaseIndexerHandler implements IndexerInterface
 {
     /**
-     * @var MeilisearchAdapter
-     */
-    private MeilisearchAdapter $meilisearchAdapter;
-
-    /**
-     * @var SearchIndexNameResolver
-     */
-    private SearchIndexNameResolver $searchIndexNameResolver;
-
-    /**
-     * @var Batch
-     */
-    private Batch $batch;
-
-    /**
-     * @var AttributeMapper
-     */
-    private AttributeMapper $attributeMapper;
-
-    /**
-     * @var string
-     */
-    private string $indexName;
-
-    /**
-     * @var SettingsInterface
-     */
-    private SettingsInterface $settings;
-
-    /**
-     * @var int
-     */
-    private int $batchSize;
-
-    /**
-     * @var string
-     */
-    private string $indexPrimaryKey;
-
-    /**
      * @param MeilisearchAdapter $meilisearchAdapter
      * @param SearchIndexNameResolver $searchIndexNameResolver
      * @param Batch $batch
@@ -64,24 +24,15 @@ class BaseIndexerHandler implements IndexerInterface
      * @param string $indexPrimaryKey
      */
     public function __construct(
-        MeilisearchAdapter $meilisearchAdapter,
-        SearchIndexNameResolver $searchIndexNameResolver,
-        Batch $batch,
-        AttributeMapper $attributeMapper,
-        string $indexName,
-        SettingsInterface $settings,
-        int $batchSize = 10000,
-        string $indexPrimaryKey = 'id'
-    ) {
-        $this->meilisearchAdapter = $meilisearchAdapter;
-        $this->searchIndexNameResolver = $searchIndexNameResolver;
-        $this->batch = $batch;
-        $this->attributeMapper = $attributeMapper;
-        $this->indexName = $indexName;
-        $this->settings = $settings;
-        $this->batchSize = $batchSize;
-        $this->indexPrimaryKey = $indexPrimaryKey;
-    }
+        private MeilisearchAdapter $meilisearchAdapter,
+        private SearchIndexNameResolver $searchIndexNameResolver,
+        private Batch $batch,
+        private AttributeMapper $attributeMapper,
+        private string $indexName,
+        private SettingsInterface $settings,
+        private int $batchSize = 10000,
+        private string $indexPrimaryKey = 'id'
+    ) { }
 
     /**
      * @param $dimensions

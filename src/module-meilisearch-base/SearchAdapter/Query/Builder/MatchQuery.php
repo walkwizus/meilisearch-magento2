@@ -18,34 +18,15 @@ class MatchQuery implements QueryInterface
     public const QUERY_CONDITION_MUST_NOT = 'mustNot';
 
     /**
-     * @var SearchIndexNameResolver
-     */
-    private SearchIndexNameResolver $searchIndexNameResolver;
-
-    /**
-     * @var Aggregation
-     */
-    private AggregationBuilder $aggregationBuilder;
-
-    /**
-     * @var ValueTransformerPool
-     */
-    private ValueTransformerPool $valueTransformerPool;
-
-    /**
      * @param SearchIndexNameResolver $searchIndexNameResolver
      * @param AggregationBuilder $aggregationBuilder
      * @param ValueTransformerPool $valueTransformerPool
      */
     public function __construct(
-        SearchIndexNameResolver $searchIndexNameResolver,
-        AggregationBuilder $aggregationBuilder,
-        ValueTransformerPool $valueTransformerPool
-    ) {
-        $this->searchIndexNameResolver = $searchIndexNameResolver;
-        $this->aggregationBuilder = $aggregationBuilder;
-        $this->valueTransformerPool = $valueTransformerPool;
-    }
+        private SearchIndexNameResolver $searchIndexNameResolver,
+        private AggregationBuilder $aggregationBuilder,
+        private ValueTransformerPool $valueTransformerPool
+    ) { }
 
     /**
      * @inheritdoc

@@ -10,34 +10,15 @@ use Magento\Framework\Search\Response\QueryResponse;
 class ResponseFactory
 {
     /**
-     * @var ObjectManagerInterface
-     */
-    private ObjectManagerInterface $objectManager;
-
-    /**
-     * @var DocumentFactory
-     */
-    private DocumentFactory $documentFactory;
-
-    /**
-     * @var AggregationFactory
-     */
-    private AggregationFactory $aggregationFactory;
-
-    /**
      * @param ObjectManagerInterface $objectManager
      * @param DocumentFactory $documentFactory
      * @param AggregationFactory $aggregationFactory
      */
     public function __construct(
-        ObjectManagerInterface $objectManager,
-        DocumentFactory $documentFactory,
-        AggregationFactory $aggregationFactory
-    ) {
-        $this->objectManager = $objectManager;
-        $this->documentFactory = $documentFactory;
-        $this->aggregationFactory = $aggregationFactory;
-    }
+        private ObjectManagerInterface $objectManager,
+        private DocumentFactory $documentFactory,
+        private AggregationFactory $aggregationFactory
+    ) { }
 
     /**
      * @param array $response

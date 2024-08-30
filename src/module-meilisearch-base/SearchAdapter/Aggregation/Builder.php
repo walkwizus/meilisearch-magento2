@@ -17,29 +17,14 @@ class Builder
     protected ?QueryContainer $query = null;
 
     /**
-     * @var array|DataProviderInterface[]
-     */
-    private array $dataProviderContainer;
-
-    /**
-     * @var array|BucketBuilderInterface[]
-     */
-    private array $aggregationContainer;
-
-    /**
-     * @var DataProviderFactory
-     */
-    private DataProviderFactory $dataProviderFactory;
-
-    /**
      * @param array $dataProviderContainer
      * @param array $aggregationContainer
      * @param DataProviderFactory $dataProviderFactory
      */
     public function __construct(
-        array $dataProviderContainer,
-        array $aggregationContainer,
-        DataProviderFactory $dataProviderFactory
+        private array $dataProviderContainer,
+        private array $aggregationContainer,
+        private DataProviderFactory $dataProviderFactory
     ) {
         $this->dataProviderContainer = array_map(
             static function (DataProviderInterface $dataProvider) {
@@ -53,7 +38,6 @@ class Builder
             },
             $aggregationContainer
         );
-        $this->dataProviderFactory = $dataProviderFactory;
     }
 
     /**

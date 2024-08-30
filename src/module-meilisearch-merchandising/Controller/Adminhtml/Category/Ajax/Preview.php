@@ -16,26 +16,6 @@ use Magento\Framework\Controller\ResultInterface;
 class Preview extends Action implements HttpPostActionInterface
 {
     /**
-     * @var Meilisearch
-     */
-    private Meilisearch $client;
-
-    /**
-     * @var QueryBuilderService
-     */
-    private QueryBuilderService $queryBuilderService;
-
-    /**
-     * @var SearchIndexNameResolver
-     */
-    private SearchIndexNameResolver $searchIndexNameResolver;
-
-    /**
-     * @var JsonFactory
-     */
-    private JsonFactory $jsonFactory;
-
-    /**
      * @param Context $context
      * @param Meilisearch $client
      * @param QueryBuilderService $queryBuilderService
@@ -44,15 +24,11 @@ class Preview extends Action implements HttpPostActionInterface
      */
     public function __construct(
         Context $context,
-        Meilisearch $client,
-        QueryBuilderService $queryBuilderService,
-        SearchIndexNameResolver $searchIndexNameResolver,
-        JsonFactory $jsonFactory
+        private Meilisearch $client,
+        private QueryBuilderService $queryBuilderService,
+        private SearchIndexNameResolver $searchIndexNameResolver,
+        private JsonFactory $jsonFactory
     ) {
-        $this->client = $client;
-        $this->queryBuilderService = $queryBuilderService;
-        $this->searchIndexNameResolver = $searchIndexNameResolver;
-        $this->jsonFactory = $jsonFactory;
         parent::__construct($context);
     }
 

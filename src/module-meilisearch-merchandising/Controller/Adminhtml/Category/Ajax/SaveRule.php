@@ -16,21 +16,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 class SaveRule extends Action implements HttpPostActionInterface
 {
     /**
-     * @var JsonFactory
-     */
-    private JsonFactory $jsonFactory;
-
-    /**
-     * @var CategoryFactory
-     */
-    private CategoryFactory $categoryFactory;
-
-    /**
-     * @var CategoryRepositoryInterface
-     */
-    private CategoryRepositoryInterface $categoryRepository;
-
-    /**
      * @param Context $context
      * @param JsonFactory $jsonFactory
      * @param CategoryFactory $categoryFactory
@@ -38,13 +23,10 @@ class SaveRule extends Action implements HttpPostActionInterface
      */
     public function __construct(
         Context $context,
-        JsonFactory $jsonFactory,
-        CategoryFactory $categoryFactory,
-        CategoryRepositoryInterface $categoryRepository
+        private JsonFactory $jsonFactory,
+        private CategoryFactory $categoryFactory,
+        private CategoryRepositoryInterface $categoryRepository
     ) {
-        $this->jsonFactory = $jsonFactory;
-        $this->categoryFactory = $categoryFactory;
-        $this->categoryRepository = $categoryRepository;
         parent::__construct($context);
     }
 

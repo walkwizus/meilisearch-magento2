@@ -24,26 +24,13 @@ class AttributeRuleProvider
     ];
 
     /**
-     * @var AttributeProvider
-     */
-    private AttributeProvider $attributeProvider;
-
-    /**
-     * @var AttributeCollectionFactory
-     */
-    private AttributeCollectionFactory $attributeCollectionFactory;
-
-    /**
      * @param AttributeProvider $attributeProvider
      * @param AttributeCollectionFactory $attributeCollectionFactory
      */
     public function __construct(
-        AttributeProvider $attributeProvider,
-        AttributeCollectionFactory $attributeCollectionFactory
-    ) {
-        $this->attributeProvider = $attributeProvider;
-        $this->attributeCollectionFactory = $attributeCollectionFactory;
-    }
+        private AttributeProvider $attributeProvider,
+        private AttributeCollectionFactory $attributeCollectionFactory
+    ) { }
 
     /**
      * @return array
