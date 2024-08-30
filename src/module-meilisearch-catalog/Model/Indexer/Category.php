@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Walkwizus\MeilisearchCatalog\Model\Indexer;
 
-use Walkwizus\MeilisearchBase\Model\Adapter\Meilisearch as MeilisearchAdapter;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\Search\Request\DimensionFactory;
 use Magento\Framework\Indexer\SaveHandler\IndexerInterface;
@@ -12,11 +11,6 @@ use Walkwizus\MeilisearchCatalog\Model\ResourceModel\Indexer\Category\Action\Ful
 
 class Category implements \Magento\Framework\Indexer\ActionInterface, \Magento\Framework\Mview\ActionInterface
 {
-    /**
-     * @var MeilisearchAdapter
-     */
-    protected MeilisearchAdapter $meilisearchAdapter;
-
     /**
      * @var StoreManagerInterface
      */
@@ -44,13 +38,11 @@ class Category implements \Magento\Framework\Indexer\ActionInterface, \Magento\F
      * @param FullAction $fullAction
      */
     public function __construct(
-        MeilisearchAdapter $meilisearchAdapter,
         StoreManagerInterface $storeManager,
         DimensionFactory $dimensionFactory,
         IndexerInterface $indexerHandler,
         FullAction $fullAction
     ) {
-        $this->meilisearchAdapter = $meilisearchAdapter;
         $this->storeManager = $storeManager;
         $this->dimensionFactory = $dimensionFactory;
         $this->indexerHandler = $indexerHandler;
@@ -60,15 +52,9 @@ class Category implements \Magento\Framework\Indexer\ActionInterface, \Magento\F
     /**
      * @param $ids
      * @return void
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute($ids)
     {
-        if (!$this->meilisearchAdapter->isHealthy()) {
-            return;
-        }
-
         $storeIds = $this->getStoreIds();
 
         foreach ($storeIds as $storeId) {
@@ -80,15 +66,9 @@ class Category implements \Magento\Framework\Indexer\ActionInterface, \Magento\F
 
     /**
      * @return void
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function executeFull()
     {
-        if (!$this->meilisearchAdapter->isHealthy()) {
-            return;
-        }
-
         $storeIds = $this->getStoreIds();
 
         foreach ($storeIds as $storeId) {
@@ -100,16 +80,12 @@ class Category implements \Magento\Framework\Indexer\ActionInterface, \Magento\F
 
     public function executeList(array $ids)
     {
-        if (!$this->meilisearchAdapter->isHealthy()) {
-            return;
-        }
+        // TODO: Implement executeList() method.
     }
 
     public function executeRow($id)
     {
-        if (!$this->meilisearchAdapter->isHealthy()) {
-            return;
-        }
+        // TODO: Implement executeRow() method.
     }
 
     /**
