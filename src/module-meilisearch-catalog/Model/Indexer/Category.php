@@ -38,7 +38,6 @@ class Category implements \Magento\Framework\Indexer\ActionInterface, \Magento\F
     protected FullAction $fullAction;
 
     /**
-     * @param MeilisearchAdapter $meilisearchAdapter
      * @param StoreManagerInterface $storeManager
      * @param DimensionFactory $dimensionFactory
      * @param IndexerInterface $indexerHandler
