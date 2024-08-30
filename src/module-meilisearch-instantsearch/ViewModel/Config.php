@@ -9,6 +9,7 @@ use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Store\Model\ScopeInterface;
 use Walkwizus\MeilisearchBase\Helper\ServerSettings;
 use Walkwizus\MeilisearchBase\Helper\Data as MeilisearchHelper;
+use Walkwizus\MeilisearchInstantSearch\Helper\Data as MeilisearchInstantSearchHelper;
 use Walkwizus\MeilisearchBase\SearchAdapter\SearchIndexNameResolver;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\Locale\Format;
@@ -29,6 +30,7 @@ class Config implements ArgumentInterface
     /**
      * @param ServerSettings $serverSettings
      * @param MeilisearchHelper $meilisearchHelper
+     * @param MeilisearchInstantSearchHelper $meilisearchInstantSearchHelper
      * @param SearchIndexNameResolver $searchIndexNameResolver
      * @param ScopeConfigInterface $scopeConfig
      * @param StoreManagerInterface $storeManager
@@ -44,6 +46,7 @@ class Config implements ArgumentInterface
     public function __construct(
         private ServerSettings $serverSettings,
         private MeilisearchHelper $meilisearchHelper,
+        private MeilisearchInstantSearchHelper $meilisearchInstantSearchHelper,
         private SearchIndexNameResolver $searchIndexNameResolver,
         private ScopeConfigInterface $scopeConfig,
         private StoreManagerInterface $storeManager,
@@ -63,6 +66,14 @@ class Config implements ArgumentInterface
     public function getHelper(): MeilisearchHelper
     {
         return $this->meilisearchHelper;
+    }
+
+    /**
+     * @return MeilisearchInstantSearchHelper
+     */
+    public function getInstantSearchHelper(): MeilisearchInstantSearchHelper
+    {
+        return $this->meilisearchInstantSearchHelper;
     }
 
     /**

@@ -1,0 +1,10 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Walkwizus\MeilisearchInstantSearch\ViewModel\Config $viewModel */
+$viewModel = $block->getData('view_model');
+
+if ($viewModel->getInstantSearchHelper()->isInstantSearchEnabled()) {
+    $this->getLayout()->unsetElement('category.products');
+    $this->getLayout()->unsetElement('catalog.leftnav');
+}
+?>

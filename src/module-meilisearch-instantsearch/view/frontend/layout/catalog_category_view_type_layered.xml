@@ -3,13 +3,25 @@
     <body>
         <referenceContainer name="columns" htmlClass="columns instantsearch-replaced-content" />
         <referenceContainer name="main.content">
-            <block class="Magento\Catalog\Block\Category\View" name="meilisearch.instantsearch" template="Walkwizus_MeilisearchInstantSearch::instantsearch/instantsearch.phtml" before="-">
+            <block
+                class="Magento\Catalog\Block\Category\View"
+                name="meilisearch.instantsearch"
+                template="Walkwizus_MeilisearchInstantSearch::instantsearch/instantsearch.phtml"
+                before="-"
+                ifconfig="meilisearch_frontend/instantsearch/enabled"
+            >
                 <arguments>
                     <argument name="view_model" xsi:type="object">Walkwizus\MeilisearchInstantSearch\ViewModel\Config</argument>
                 </arguments>
             </block>
         </referenceContainer>
-        <referenceBlock name="category.products" remove="true"/>
-        <referenceBlock name="catalog.leftnav" remove="true"/>
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template" name="meilisearch.remove.blocks" after="-">
+                <arguments>
+                    <argument name="template" xsi:type="string">Walkwizus_MeilisearchInstantSearch::remove_blocks.phtml</argument>
+                    <argument name="view_model" xsi:type="object">Walkwizus\MeilisearchInstantSearch\ViewModel\Config</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
     </body>
 </page>
