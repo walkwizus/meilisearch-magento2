@@ -1,11 +1,11 @@
 # <p align="center">Meilisearch / Magento 2 (Adobe Commerce)</p>
 
-The Meilisearch extension for Magento 2 enables replacing Magento's default search engine (ElasticSearch) with Meilisearch.
+The Meilisearch extension for Magento 2 enables replacing Magento's default search engine (OpenSearch) with Meilisearch.
 
 ## Prerequisites
 
 * Magento >= 2.4.4
-* Meilisearch >= v1.7.4
+* Meilisearch >= v1.9.0
 * PHP >= 8.1
 
 Magento 2 module install
