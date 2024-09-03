@@ -48,4 +48,20 @@ class Category extends AbstractModel implements CategoryInterface
     {
         return $this->setData(self::QUERY, $query);
     }
+
+    /**
+     * @ingeritdoc
+     */
+    public function getStoreId()
+    {
+        return $this->getData(self::STORE_ID);
+    }
+
+    /**
+     * @ingeritdoc
+     */
+    public function setStoreId($storeId)
+    {
+        return $this->setData(self::STORE_ID, $storeId);
+    }
 }

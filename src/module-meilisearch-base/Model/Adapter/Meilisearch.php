@@ -88,6 +88,18 @@ class Meilisearch
         return $this;
     }
 
+    public function updateDocuments(string $indexName, array $documents): static
+    {
+        if (count($documents)) {
+            try {
+                $this->client->index($indexName)->updateDocuments($documents);
+            } catch (\Exception $e) {
+
+            }
+        }
+        return $this;
+    }
+
     /**
      * @param $indexName
      * @param array $settings

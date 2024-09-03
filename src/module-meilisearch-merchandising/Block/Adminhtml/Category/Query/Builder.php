@@ -14,6 +14,14 @@ use Magento\Framework\UrlInterface;
 
 class Builder extends Template
 {
+    private array $ajaxUrls = [
+        'loadRule' => 'meilisearch_merchandising/category/ajax_getrule',
+        'saveRule' => 'meilisearch_merchandising/category/ajax_saverule',
+        'deleteRule' => 'meilisearch_merchandising/category/ajax_deleterule',
+        'preview' => 'meilisearch_merchandising/category/ajax_preview',
+        'promoteProduct' => 'meilisearch_merchandising/category_ajax/promote'
+    ];
+
     /**
      * @param Context $context
      * @param QueryBuilderService $queryBuilderService
@@ -33,50 +41,19 @@ class Builder extends Template
 
     /**
      * @return string
+     * @throws NoSuchEntityException
      */
-    public function getSaveRuleUrl(): string
+    public function getJsLayout()
     {
-        return $this->getUrl('meilisearch_merchandising/category/ajax_saverule');
-    }
+        $this->jsLayout['components']['categoryMerchandisingQueryBuilder']['config']['filters'] = $this->getFilters();
+        $this->jsLayout['components']['categoryMerchandisingQueryBuilder']['config']['storeId'] = $this->getStoreId();
+        $this->jsLayout['components']['categoryMerchandisingQueryBuilder']['config']['productMediaUrl'] = $this->getProductMediaUrl();
 
-    /**
-     * @return string
-     */
-    public function getDeleteRuleUrl(): string
-    {
-        return $this->getUrl('meilisearch_merchandising/category/ajax_deleterule');
-    }
+        foreach ($this->ajaxUrls as $key => $value) {
+            $this->jsLayout['components']['categoryMerchandisingQueryBuilder']['config']['ajaxUrl'][$key] = $this->getUrl($value);
+        }
 
-    /**
-     * @return string
-     */
-    public function getPreviewUrl(): string
-    {
-        return $this->getUrl('meilisearch_merchandising/category/ajax_preview');
-    }
-
-    /**
-     * @return string
-     */
-    public function getProductChooserUrl(): string
-    {
-        return $this->getUrl('meilisearch_merchandising/category_ajax/chooser_sku');
-    }
-
-    /**
-     * @return string
-     */
-    public function getCategoryChooserUrl(): string
-    {
-        return $this->getUrl('meilisearch_merchandising/category_ajax/chooser_category');
-    }
-
-    /**
-     * @return string
-     */
-    public function getPromoteProductUrl(): string
-    {
-        return $this->getUrl('meilisearch_merchandising/category_ajax/promote');
+        return parent::getJsLayout();
     }
 
     /**

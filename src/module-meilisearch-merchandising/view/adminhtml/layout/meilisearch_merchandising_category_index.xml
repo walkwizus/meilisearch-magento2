@@ -11,10 +11,30 @@
             <block class="Magento\Backend\Block\Store\Switcher" name="category.store.switcher" template="Magento_Backend::store/switcher.phtml"/>
         </referenceContainer>
         <referenceContainer name="left">
-            <block name="merch.category.tree" class="Walkwizus\MeilisearchMerchandising\Block\Adminhtml\Category\Tree" template="Walkwizus_MeilisearchMerchandising::category/tree.phtml"/>
+            <block name="merch.category.tree" class="Walkwizus\MeilisearchMerchandising\Block\Adminhtml\Category\Tree" template="Walkwizus_MeilisearchMerchandising::category/tree.phtml">
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="categoryMerchandisingTree" xsi:type="array">
+                                <item name="component" xsi:type="string">Walkwizus_MeilisearchMerchandising/js/category/component/tree</item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
         </referenceContainer>
         <referenceContainer name="content">
-            <block name="merch.category.query.builder" class="Walkwizus\MeilisearchMerchandising\Block\Adminhtml\Category\Query\Builder" template="Walkwizus_MeilisearchMerchandising::category/query/builder.phtml"/>
+            <block name="merch.category.query.builder" class="Walkwizus\MeilisearchMerchandising\Block\Adminhtml\Category\Query\Builder" template="Walkwizus_MeilisearchMerchandising::category/query-builder.phtml">
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="categoryMerchandisingQueryBuilder" xsi:type="array">
+                                <item name="component" xsi:type="string">Walkwizus_MeilisearchMerchandising/js/category/component/query-builder</item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
         </referenceContainer>
     </body>
 </page>

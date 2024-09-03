@@ -36,7 +36,7 @@ class GetRule extends Action implements HttpPostActionInterface
 
         try {
             $rule = $this->categoryRepository->getByCategoryId($categoryId);
-            return $json->setData($rule->getQuery());
+            return $json->setData($rule->toArray());
         } catch (\Exception $e) {
             return $json->setData([]);
         }

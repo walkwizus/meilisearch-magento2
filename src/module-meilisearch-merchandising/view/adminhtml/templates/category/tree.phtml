@@ -1,13 +1,12 @@
 <?php /** @var \Walkwizus\MeilisearchMerchandising\Block\Adminhtml\Category\Tree $block */ ?>
 <?php if ($block->getStoreId()) : ?>
-<div id="merch-category-tree"></div>
+<div id="category-merchandising-tree-container" data-bind="scope: 'categoryMerchandisingTree'">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+</div>
 <script type="text/x-magento-init">
     {
-        "#merch-category-tree": {
-            "Walkwizus_MeilisearchMerchandising/js/category/tree": {
-                "categoryTree": <?= $block->getCategoryTree() ?>,
-                "loadRuleUrl": "<?= $block->getLoadRuleUrl() ?>"
-            }
+        "#category-merchandising-tree-container": {
+            "Magento_Ui/js/core/app": <?= /* @noEscape */ $block->getJsLayout() ?>
         }
     }
 </script>

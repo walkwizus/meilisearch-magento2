@@ -32,6 +32,7 @@
                     <item name="eav" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeProvider\Product\Eav</item>
                     <item name="price" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeProvider\Product\Price</item>
                     <item name="categoryPosition" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeProvider\Product\CategoryPosition</item>
+                    <item name="categoryPromote" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeProvider\Product\CategoryPromote</item>
                 </item>
                 <item name="catalog_category" xsi:type="array">
                     <item name="default" xsi:type="object">\Walkwizus\MeilisearchCatalog\Index\AttributeProvider\Category\DefaultAttribute</item>

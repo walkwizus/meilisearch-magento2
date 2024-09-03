@@ -10,6 +10,8 @@ interface CategoryInterface
 
     const QUERY = 'query';
 
+    const STORE_ID = 'store_id';
+
     /**
      * @return int
      */
@@ -31,4 +33,15 @@ interface CategoryInterface
      * @return $this
      */
     public function setQuery(string $query);
+
+    /**
+     * @return mixed
+     */
+    public function getStoreId();
+
+    /**
+     * @param $storeId
+     * @return $this
+     */
+    public function setStoreId($storeId);
 }

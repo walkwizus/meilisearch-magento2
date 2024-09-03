@@ -64,6 +64,9 @@
                     label: 'Relevance',
                     value: '<?= $viewModel->getIndexName('catalog_product') ?>'
                 },{
+                    label: 'Position',
+                    value: '<?= $viewModel->getIndexName('catalog_product') ?>:position_category_<?= $categoryId ?>:asc'
+                },{
                     label: 'Lowest price',
                     value: '<?= $viewModel->getIndexName('catalog_product') ?>:price_<?= $customerGroupId ?>:asc'
                 },{

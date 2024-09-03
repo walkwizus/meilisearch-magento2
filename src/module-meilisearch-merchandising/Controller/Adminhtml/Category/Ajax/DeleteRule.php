@@ -35,15 +35,18 @@ class DeleteRule extends Action implements HttpPostActionInterface
      */
     public function execute(): ResultInterface
     {
-        $categoryId = $this->getRequest()->getParam('category_id', false);
+        $categoryId = $this->getRequest()->getParam('categoryId', false);
+
+        $json = $this->jsonFactory->create();
 
         try {
             $this->categoryRepository->deleteByCategoryId($categoryId);
         } catch (CouldNotDeleteException $couldNotDeleteException) {
-
+            return $json->setData(['success'=> false, 'message' => __($couldNotDeleteException->getMessage())]);
+        } catch (\Exception $e) {
+            return $json->setData(['success'=> false, 'message' => __($e->getMessage())]);
         }
 
-        $json = $this->jsonFactory->create();
         return $json->setData(['success'=> true, 'message' => __('Category was deleted')]);
     }
 }

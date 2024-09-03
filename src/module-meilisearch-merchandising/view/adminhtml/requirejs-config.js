@@ -1,11 +1,11 @@
 var config = {
     paths: {
-        'jsTree': 'Walkwizus_MeilisearchMerchandising/js/jsTree.min',
-        'jquery-extendext': 'Walkwizus_MeilisearchMerchandising/js/jquery-extendext',
-        'queryBuilder': 'Walkwizus_MeilisearchMerchandising/js/query-builder.min'
+        'jstree': 'Walkwizus_MeilisearchMerchandising/js/lib/jstree.min',
+        'jquery-extendext': 'Walkwizus_MeilisearchMerchandising/js/lib/jquery-extendext',
+        'queryBuilder': 'Walkwizus_MeilisearchMerchandising/js/lib/query-builder.min'
     },
     shim: {
-        'jsTree': {
+        'jstree': {
             deps: ['jquery']
         },
         'queryBuilder': {

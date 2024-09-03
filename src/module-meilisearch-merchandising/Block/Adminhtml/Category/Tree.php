@@ -29,6 +29,18 @@ class Tree extends Template
     }
 
     /**
+     * @return string
+     * @throws \Exception
+     */
+    public function getJsLayout()
+    {
+        $this->jsLayout['components']['categoryMerchandisingTree']['config']['categoryTree'] = $this->getCategoryTree();
+        $this->jsLayout['components']['categoryMerchandisingTree']['config']['loadRuleUrl'] = $this->getLoadRuleUrl();
+
+        return parent::getJsLayout();
+    }
+
+    /**
      * @return mixed
      */
     public function getStoreId(): mixed

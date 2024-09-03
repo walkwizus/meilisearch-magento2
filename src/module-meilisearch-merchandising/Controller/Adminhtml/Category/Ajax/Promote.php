@@ -6,47 +6,45 @@ namespace Walkwizus\MeilisearchMerchandising\Controller\Adminhtml\Category\Ajax;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\CatalogSearch\Model\Indexer\Fulltext\Action\FullFactory;
-use Walkwizus\MeilisearchBase\Index\AttributeMapper;
-use Walkwizus\MeilisearchBase\Api\Index\SettingsInterface;
 use Walkwizus\MeilisearchBase\Model\Adapter\Meilisearch;
+use Walkwizus\MeilisearchBase\SearchAdapter\SearchIndexNameResolver;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Controller\ResultFactory;
 
 class Promote extends Action
 {
     /**
      * @param Context $context
-     * @param FullFactory $fullFactory
-     * @param AttributeMapper $attributeMapper
-     * @param SettingsInterface $settings
+     * @param SearchIndexNameResolver $searchIndexNameResolver
      * @param Meilisearch $meilisearchAdapter
      */
     public function __construct(
         Context $context,
-        private FullFactory $fullFactory,
-        private AttributeMapper $attributeMapper,
-        private SettingsInterface $settings,
+        private SearchIndexNameResolver $searchIndexNameResolver,
         private Meilisearch $meilisearchAdapter
     ) {
         parent::__construct($context);
     }
 
+    /**
+     * @return ResultInterface
+     */
     public function execute()
     {
         $productId = $this->getRequest()->getParam('product_id');
         $storeId = $this->getRequest()->getParam('store_id');
         $categoryId = $this->getRequest()->getParam('category_id');
 
-        $full = $this->fullFactory->create();
-        $documents = $full->rebuildStoreIndex(1, [$productId]);
+        $indexName = $this->searchIndexNameResolver->getIndexName($storeId, 'catalog_product');
 
-        $indexName = 'merchandising_category_' . $storeId;
+        $this->meilisearchAdapter->updateDocuments($indexName, [
+            'id' => $productId,
+            'category_promote' => [$categoryId => 0]
+        ]);
 
-        $this->meilisearchAdapter->updateSettings($indexName, $this->settings->getSettings('catalog_product'));
+        $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+        $result->setData(['message' => 'ok']);
 
-        foreach ($documents as $document) {
-            $product[$productId] = $document;
-            $productData = $this->attributeMapper->map('catalog_product', $product, $storeId);
-            $this->meilisearchAdapter->addDocs($indexName, $productData, 'id');
-        }
+        return $result;
     }
 }

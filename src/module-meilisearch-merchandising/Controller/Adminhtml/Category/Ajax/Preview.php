@@ -37,39 +37,26 @@ class Preview extends Action implements HttpPostActionInterface
      */
     public function execute(): ResultInterface
     {
-        $rules = $this->getRequest()->getParam('rules');
+        $rules = $this->getRequest()->getParam('rules', false);
+        $json = $this->jsonFactory->create();
+
+        if (!$rules) {
+            return $json->setData([]);
+        }
+
+        $rules = json_decode($rules, true);
         $storeId = $this->getRequest()->getParam('storeId');
-        $page = max((int)$this->getRequest()->getParam('page'), 1);
-        $limit = (int)$this->getRequest()->getParam('limit', 20);
+        $categoryId = $this->getRequest()->getParam('categoryId');
 
         $filters = $this->queryBuilderService->convertRulesToMeilisearchQuery($rules);
         $indexName = $this->searchIndexNameResolver->getIndexName($storeId, 'catalog_product');
 
-        $offset = ($page - 1) * $limit;
-
-        try {
-            $promotedResult = $this->client->search('merchandising_category_' . $storeId, '' , [
-                'filter' => $filters,
-                'limit' => $limit,
-                'offset' => $offset
-            ]);
-            $promotedResult = $promotedResult->getHits();
-        } catch (\Exception $e) {
-            $promotedResult = [];
-        }
-
-        $naturalResult = $this->client->search($indexName, '', [
+        $result = $this->client->search($indexName, '', [
             'filter' => $filters,
-            'limit' => $limit,
-            'offset' => $offset
+            'sort' => ["category_promote.{$categoryId}:asc"],
+            'limit' => 10000
         ]);
-        $naturalResult = $naturalResult->getHits();
 
-        $result = [
-            'promoted' => $promotedResult,
-            'natural' => $naturalResult
-        ];
-
-        return $this->jsonFactory->create()->setData($result);
+        return $json->setData($result->getHits());
     }
 }

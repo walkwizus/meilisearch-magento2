@@ -88,7 +88,12 @@ class QueryBuilderService
         return $meilisearchQuery;
     }
 
-    private function formatValue($val, $type): string
+    /**
+     * @param $val
+     * @param $type
+     * @return string|int|float
+     */
+    private function formatValue($val, $type): string|int|float
     {
         if ($type === 'boolean') {
             return $val ? '1' : '0';

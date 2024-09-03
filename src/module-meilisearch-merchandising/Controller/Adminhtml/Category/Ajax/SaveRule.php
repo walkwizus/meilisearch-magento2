@@ -35,9 +35,17 @@ class SaveRule extends Action implements HttpPostActionInterface
      */
     public function execute(): ResultInterface
     {
-        $categoryId = $this->getRequest()->getParam('category_id', false);
+        $json = $this->jsonFactory->create();
+
         $storeId = $this->getRequest()->getParam('storeId');
+        $categoryId = $this->getRequest()->getParam('categoryId', false);
         $rules = $this->getRequest()->getParam('rules', false);
+
+        if (!$rules) {
+            return $json->setData(['success' => false, 'message' => __('Invalid rules')]);
+        }
+
+        $rules = json_decode($rules, true);
 
         unset($rules['valid']);
 
@@ -51,11 +59,12 @@ class SaveRule extends Action implements HttpPostActionInterface
             $categoryRule->setStoreId($storeId);
             $categoryRule->setCategoryId($categoryId);
             $categoryRule->setQuery(json_encode($rules));
+        } catch (\Exception $e) {
+            return $json->setData(['success'=> false, 'message' => __($e->getMessage())]);
         }
 
         $this->categoryRepository->save($categoryRule);
 
-        $json = $this->jsonFactory->create();
         return $json->setData(['success'=> true, 'message' => __('Category was saved')]);
     }
 }
