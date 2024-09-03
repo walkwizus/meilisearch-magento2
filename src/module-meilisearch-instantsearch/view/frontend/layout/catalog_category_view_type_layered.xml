@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceContainer name="columns" htmlClass="columns instantsearch-replaced-content" />
         <referenceContainer name="main.content">
             <block
                 class="Magento\Catalog\Block\Category\View"
@@ -11,14 +10,6 @@
                 ifconfig="meilisearch_frontend/instantsearch/enabled"
             >
                 <arguments>
-                    <argument name="view_model" xsi:type="object">Walkwizus\MeilisearchInstantSearch\ViewModel\Config</argument>
-                </arguments>
-            </block>
-        </referenceContainer>
-        <referenceContainer name="content">
-            <block class="Magento\Framework\View\Element\Template" name="meilisearch.remove.blocks" after="-">
-                <arguments>
-                    <argument name="template" xsi:type="string">Walkwizus_MeilisearchInstantSearch::remove_blocks.phtml</argument>
                     <argument name="view_model" xsi:type="object">Walkwizus\MeilisearchInstantSearch\ViewModel\Config</argument>
                 </arguments>
             </block>
