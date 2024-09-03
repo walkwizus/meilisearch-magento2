@@ -20,7 +20,7 @@ define([
             this.initQueryBuilder();
 
             merchandising.currentCategoryId.subscribe(this.loadRules.bind(this));
-            merchandising.preview.subscribe(this.sortPreview.bind(this));
+            merchandising.docs.subscribe(this.sortPreview.bind(this));
         },
         initQueryBuilder: function() {
             let self = this;
@@ -60,18 +60,27 @@ define([
             let rules = self.qb.queryBuilder('getRules');
 
             if (rules) {
+                console.log(merchandising.docPositions());
                 $.ajax(this.ajaxUrl.saveRule, {
                     type: 'POST',
                     data: {
                         form_key: window.FORM_KEY,
                         storeId: self.storeId,
                         categoryId: merchandising.currentCategoryId(),
-                        rules: JSON.stringify(rules)
+                        rules: JSON.stringify(rules),
+                        docPositions: JSON.stringify(merchandising.docPositions())
                     },
                     dataType: 'json',
                     showLoader: true,
                     success: function(r) {
                         merchandising.message(r.message);
+                        setTimeout(function() {
+                            $('#messages').addClass('hide');
+                            setTimeout(function() {
+                                merchandising.message('');
+                                $('#messages').removeClass('hide');
+                            }, 500);
+                        }, 2000);
                     }
                 });
             }
@@ -87,6 +96,13 @@ define([
                 showLoader: true,
                 success: function(r) {
                     merchandising.message(r.message);
+                    setTimeout(function() {
+                        $('#messages').addClass('hide');
+                        setTimeout(function() {
+                            merchandising.message('');
+                            $('#messages').removeClass('hide');
+                        }, 500);
+                    }, 2000);
                 }
             });
         },
@@ -106,10 +122,20 @@ define([
                     dataType: 'json',
                     showLoader: true,
                     success: function(r) {
-                        merchandising.preview(r);
+                        merchandising.docs(r);
+                        self.initializePositions(r);
                     }
                 });
             }
+        },
+        initializePositions: function(docs) {
+            let docPositions = docs.map(function(doc, index) {
+                return {
+                    id: doc.id,
+                    position: index + 1
+                };
+            });
+            merchandising.docPositions(docPositions);
         },
         sortPreview: function() {
             $('#category-merchandising-preview .product-grid').sortable({
@@ -120,16 +146,23 @@ define([
                     }).get();
 
                     let sortedArray = [];
-                    sortedIds.forEach(function(id) {
-                        let item = ko.utils.arrayFirst(merchandising.preview(), function(product) {
+                    let docPositions = [];
+
+                    sortedIds.forEach(function(id, index) {
+                        let item = ko.utils.arrayFirst(merchandising.docs(), function(product) {
                             return product.id === id;
                         });
                         if (item) {
                             sortedArray.push(item);
+                            docPositions.push({
+                                id: id,
+                                position: index + 1
+                            });
                         }
                     });
 
-                    merchandising.preview(sortedArray);
+                    merchandising.docs(sortedArray);
+                    merchandising.docPositions(docPositions);
                 }
             });
         }

@@ -119,6 +119,11 @@
     box-shadow: none;
 }
 
-*, *::before, *::after {
-    box-sizing: border-box;
+.fadeout {
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+.fadeout.hide {
+    opacity: 0;
 }

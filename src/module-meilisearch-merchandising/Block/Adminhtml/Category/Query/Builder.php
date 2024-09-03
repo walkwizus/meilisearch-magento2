@@ -18,8 +18,7 @@ class Builder extends Template
         'loadRule' => 'meilisearch_merchandising/category/ajax_getrule',
         'saveRule' => 'meilisearch_merchandising/category/ajax_saverule',
         'deleteRule' => 'meilisearch_merchandising/category/ajax_deleterule',
-        'preview' => 'meilisearch_merchandising/category/ajax_preview',
-        'promoteProduct' => 'meilisearch_merchandising/category_ajax/promote'
+        'preview' => 'meilisearch_merchandising/category/ajax_preview'
     ];
 
     /**

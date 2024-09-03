@@ -12,6 +12,7 @@ use Walkwizus\MeilisearchMerchandising\Model\CategoryFactory;
 use Walkwizus\MeilisearchMerchandising\Api\CategoryRepositoryInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Walkwizus\MeilisearchMerchandising\Service\SaveProductPosition;
 
 class SaveRule extends Action implements HttpPostActionInterface
 {
@@ -25,7 +26,8 @@ class SaveRule extends Action implements HttpPostActionInterface
         Context $context,
         private JsonFactory $jsonFactory,
         private CategoryFactory $categoryFactory,
-        private CategoryRepositoryInterface $categoryRepository
+        private CategoryRepositoryInterface $categoryRepository,
+        private SaveProductPosition $saveProductPosition
     ) {
         parent::__construct($context);
     }
@@ -40,6 +42,7 @@ class SaveRule extends Action implements HttpPostActionInterface
         $storeId = $this->getRequest()->getParam('storeId');
         $categoryId = $this->getRequest()->getParam('categoryId', false);
         $rules = $this->getRequest()->getParam('rules', false);
+        $documentPositions = $this->getRequest()->getParam('docPositions', false);
 
         if (!$rules) {
             return $json->setData(['success' => false, 'message' => __('Invalid rules')]);
@@ -64,6 +67,11 @@ class SaveRule extends Action implements HttpPostActionInterface
         }
 
         $this->categoryRepository->save($categoryRule);
+
+        if ($documentPositions) {
+            $documentPositions = json_decode($documentPositions, true);
+            $this->saveProductPosition->execute($documentPositions, $categoryId, $storeId);
+        }
 
         return $json->setData(['success'=> true, 'message' => __('Category was saved')]);
     }

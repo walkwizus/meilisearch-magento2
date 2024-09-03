@@ -29,7 +29,7 @@ define([
                         }
                     }).on('select_node.jstree', function(node, selected) {
                         merchandising.currentCategoryId(selected.node.id);
-                        merchandising.preview([]);
+                        merchandising.docs([]);
                     });
                 }
             };

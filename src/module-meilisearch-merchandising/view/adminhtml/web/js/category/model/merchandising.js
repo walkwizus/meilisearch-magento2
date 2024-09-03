@@ -7,7 +7,8 @@ define([
     return {
         currentCategoryId: ko.observable(null),
         currentRule: ko.observable(null),
-        preview: ko.observableArray(),
+        docs: ko.observableArray(),
+        docPositions: ko.observableArray(),
         message: ko.observable(null)
     };
 });
